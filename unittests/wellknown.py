@@ -17,31 +17,30 @@ from pycose.keys import ec2
 from pycose.keys.curves import P256
 from pycose.algorithms import Es256
 
-WELLKNOWN_PEM_KEY='''
+WELLKNOWN_PEM_KEY = """
 -----BEGIN EC PRIVATE KEY-----
 MHcCAQEEIAGU/cL6L/zAQdP/EgRbc8huT/lf9mKl7ugqvfRKLQt1oAoGCCqGSM49
 AwEHoUQDQgAEVMRP6xMBm7XfepD9X4i1PgNgXEW3VuOYvlBpWOLZmy9EdxKpndAa
 brYHLKDmmHq8IWbhiLrMnvxWLEvVZIRSTQ==
 -----END EC PRIVATE KEY-----
-'''
+"""
 
 
 def _itobig(n):
     """
     converts a python integer to big endian bytes
     """
-    return n.to_bytes((n.bit_length() + 7) // 8, 'big')
-
+    return n.to_bytes((n.bit_length() + 7) // 8, "big")
 
 
 def key():
     """
     Returns a key object for the well known pem
     """
-    key = load_pem_private_key(WELLKNOWN_PEM_KEY.encode() , password=None)
+    key = load_pem_private_key(WELLKNOWN_PEM_KEY.encode(), password=None)
 
-    if key.curve.name != 'secp256r1':
-        raise ValueError('unexpected key type')
+    if key.curve.name != "secp256r1":
+        raise ValueError("unexpected key type")
 
     # TODO: There must be a better way to load a PEM for pycose, this is super
     # frustrating. I imagine it is to avoid the osl dependency.

@@ -20,7 +20,7 @@ contents::
 
 """
 
-# [receipts-02]: 
+# [receipts-02]:
 # TODO: check format of docstrings is compatible with sphynx. need ci support adding to check this
 from typing import Tuple
 import base64
@@ -32,7 +32,7 @@ from pycose import headers
 def receipt_trie_alg_contents(receiptb64: str) -> Tuple[Sign1Message, bytes]:
     """
     decode the protected header, the signature and the tree-alg contents from the receipt.
-    
+
     The semantics of the contents are defined by the EIP1186NamedSlotProofs tree
     alg.
 
@@ -45,7 +45,9 @@ def receipt_trie_alg_contents(receiptb64: str) -> Tuple[Sign1Message, bytes]:
     return sign_protected, contents, signature
 
 
-def receipt_verify_envelope(key, sign_protected: bytes, contents: bytes, signature: bytes):
+def receipt_verify_envelope(
+    key, sign_protected: bytes, contents: bytes, signature: bytes
+):
     """
     Verify the signature and protected header for the partially decoded receipt
 
@@ -70,5 +72,3 @@ def receipt_verify_envelope(key, sign_protected: bytes, contents: bytes, signatu
     msg = Sign1Message(phdr, None, contents, key=key)
     # XXX: TODO: This fails because the backend failed to include the Algorithm header
     msg.verify_signature(signature)
-
-

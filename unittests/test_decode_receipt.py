@@ -8,14 +8,11 @@ from unittest import TestCase
 
 from rkvst_receipt_scitt.receiptdecoder import (
     receipt_trie_alg_contents,
-    #, receipt_verify_envelope
+    # , receipt_verify_envelope
 )
-from rkvst_receipt_scitt import (
-    trie_alg,
-    khipureceipt
-)
+from rkvst_receipt_scitt import trie_alg, khipureceipt
 
-from .wellknown import key 
+from .wellknown import key
 
 
 class TestReceiptDecoder(TestCase):
@@ -48,5 +45,4 @@ class TestReceiptDecoder(TestCase):
         # order to decide how to deal with the key.
 
         # receipt_verify_envelope(k, phdr, sig, contents)
-        print(phdr, sig, contents, k) # XXX: reference the vars
-
+        print(phdr, sig, contents, k)  # XXX: reference the vars

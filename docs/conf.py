@@ -12,14 +12,15 @@
 #
 import os
 import sys
-sys.path.insert(0, os.path.abspath('..'))
+
+sys.path.insert(0, os.path.abspath(".."))
 
 import sphinx_rtd_theme
 
 # -- Project information -----------------------------------------------------
-project = 'RKVST'
-copyright = '2022, support@rkvst.com'
-author = 'support@rkvst.com'
+project = "RKVST"
+copyright = "2022, support@rkvst.com"
+author = "support@rkvst.com"
 
 version = "0.0.1a"
 release = "0.0.1a"
@@ -41,26 +42,26 @@ extensions = [
     "sphinx.ext.napoleon",
     "sphinx.ext.todo",
     "sphinx.ext.viewcode",
-    "myst_parser"  # markdown
+    "myst_parser",  # markdown
 ]
 
 # Add any paths that contain templates here, relative to this directory.
-templates_path = ['_templates']
+templates_path = ["_templates"]
 
 # List of patterns, relative to source directory, that match files and
 # directories to ignore when looking for source files.
 # This pattern also affects html_static_path and html_extra_path.
 exclude_patterns = [
-    '_build',
-    'Thumbs.db',
-    '.DS_Store',
-    'scripts',
-    'unittests',
-    'functests',
-    '**.ipynb_checkpoints',
+    "_build",
+    "Thumbs.db",
+    ".DS_Store",
+    "scripts",
+    "unittests",
+    "functests",
+    "**.ipynb_checkpoints",
 ]
 
-source_suffix = [ '.md', '.rst']
+source_suffix = [".md", ".rst"]
 
 # -- Options for HTML output -------------------------------------------------
 
@@ -70,31 +71,30 @@ source_suffix = [ '.md', '.rst']
 
 # These paths are either relative to html_static_path
 # or fully qualified paths (eg. https://...)
-html_css_files = [ 
-    'css/rkvst_theme.css', 
+html_css_files = [
+    "css/rkvst_theme.css",
 ]
 html_favicon = "_static/favicon.ico"
-html_logo = '_static/RKVST_WhtLogo_RGB.png'
+html_logo = "_static/RKVST_WhtLogo_RGB.png"
 html_show_sourcelink = False
 html_show_sphinx = False
 # Add any paths that contain custom static files (such as style sheets) here,
 # relative to this directory. They are copied after the builtin static files,
 # so a file named "default.css" will overwrite the builtin "default.css".
-html_static_path = ['_static']
+html_static_path = ["_static"]
 
-html_theme = 'sphinx_rtd_theme'
+html_theme = "sphinx_rtd_theme"
 html_theme_options = {
-    'analytics_id': 'G-7K46H3KK7N',  #  Provided by Google in your dashboard
-    'logo_only': True,
+    "analytics_id": "G-7K46H3KK7N",  #  Provided by Google in your dashboard
+    "logo_only": True,
 }
 
 
 # -- Notebooks -------------------------------------------------
-nbsphinx_execute = 'never'
+nbsphinx_execute = "never"
 
 # -- Spelling -------------------------------------------------
-spelling_lang = 'en_US'
-spelling_word_list_filename ='spelling_wordlist.txt'
+spelling_lang = "en_US"
+spelling_word_list_filename = "spelling_wordlist.txt"
 spelling_show_suggestions = True
 spelling_verbose = True
-
