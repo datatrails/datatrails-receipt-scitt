@@ -30,19 +30,29 @@ ELEMENT_ID_BYTESLIST = (
 )
 
 
+class MetadataError(Exception):
+    """
+    Raised when there is an unexpected formatting or content issue with the metadata.
+    """
+
+
 class SlotArray:
     """
     Helper for eip1186:1:sa
+
+    After construction the concatenation of all slot values is available on .value
+    The individual slot values are available in .values
     """
 
     def __init__(self, storageproofs, lenlast=None):
         """
         The list of proofs in storageproof is treated a list of slots where the
-        raw values are the application bytes. No extra metadata is required for
-        this type. However, if the number of significant bytes for the last slot
-        is known it can be supplied via lenlast. This does not impact the proof,
-        that is for the full slot contents regardless of storage layout within
-        that slot.
+        raw values are the application bytes.
+
+        No extra metadata is required for this type. However, if the number of
+        significant bytes for the last slot is known it can be supplied via
+        lenlast. This does not impact the proof, that is for the full slot
+        contents regardless of storage layout within that slot.
 
         This accommodates:
          * a storage proof for a solidity dynamic array of bytes (string or bytes)
@@ -52,16 +62,17 @@ class SlotArray:
         :param lenlast: If the number of bytes stored in the last slot is known the last slot can be trimmed
         """
 
-        values = []
+        self.values = []
         for proof in storageproofs:
             # Notice: the proof values omit the 0's from the big end, so we must put them back.
-            values.append(bytes(HexBytes(proof["value"])).rjust(32, b"\x00"))
+            # values.append(bytes(HexBytes(proof["value"])).rjust(32, b"\x00"))
+            self.values.append(bytes(HexBytes(proof["value"])))
         if lenlast != None and len(storageproofs):
             # Note that lenlast is relative to the full 32 byte slot length and
             # we padded appropriate above.
-            values[-1] = values[-1][:lenlast]
+            self.values[-1] = self.values[-1][:lenlast]
 
-        self.value = b"".join(values)
+        self.value = b"".join(self.values)
 
 
 class ByteArrays:
@@ -76,20 +87,31 @@ class ByteArrays:
 
         For example:
 
-            metadata: {slots: [3, 2, 5]}
+            metadata: {
+                slots: [3, 2, 5],
+                lenlasts: [28, 3, 32]
+            }
 
         Describes 3 distinct byte arrays. The first consumes the values for the
         first 3 proofs, the second proof values 3 & 4, and the last takes the
         remaining 5 proof values.
 
+        The last slot of each respective array has 28 bytes, 3 bytes and finally exactly  32 bytes
         """
+
+        # The metadata uses associative arrays rather than structured objects as
+        # it keeps the size of the metadata down. It also makes it more
+        # composable and open for extension.
+        if len(metadata["slots"]) != len(metadata["lenlasts"]):
+            raise MetadataError(f"mismatched slots and 'length last slot' counts")
 
         self.arrays = []
         start = 0
-        for count in metadata["slots"]:
-            # TODO: we might actually need the lastlen's here
+        for i in range(len(metadata["slots"])):
+            count = metadata["slots"][i]
+            lenlast = metadata["lenlasts"][i]
             self.arrays.append(
-                SlotArray(storageproofs[start:count], lenlast=None).value
+                SlotArray(storageproofs[start:count], lenlast=lenlast).value
             )
             start += count
 

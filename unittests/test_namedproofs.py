@@ -17,19 +17,19 @@ class TestNamedProofs(TestCase):
         """
         test that we get the expected named proofs from our standard encoded receipt test data
         """
-        contents = json_loads_receipt_contents("khipu_receipt_happy_default2.b64")
+        contents = json_loads_receipt_contents("khipu_receipt_happy_default.b64")
         np = NamedProofs(contents)
         np.check_payload_keys()
         np.check_application_parameters(*EXTRA_PARAMETERS)
         np.collect_proofs(*MANIFEST_ELEMENTS)
-        kk = list(np._named.keys())
+        kk = list(np._proofs.keys())
         self.assertEqual(MANIFEST_ELEMENTS, kk)
 
     def test_raise_missing_khipu_proofs(self):
         """
         test that we get the expected named proofs from our standard encoded receipt test data
         """
-        contents = json_loads_receipt_contents("khipu_receipt_happy_default2.b64")
+        contents = json_loads_receipt_contents("khipu_receipt_happy_default.b64")
         np = NamedProofs(contents)
         np.check_payload_keys()
         np.check_application_parameters(*EXTRA_PARAMETERS)
@@ -38,14 +38,14 @@ class TestNamedProofs(TestCase):
 
     def test_verify_proofs(self):
         """ """
-        contents = json_loads_receipt_contents("khipu_receipt_happy_default2.b64")
+        contents = json_loads_receipt_contents("khipu_receipt_happy_default.b64")
         np = NamedProofs(contents)
         np.collect_proofs(*MANIFEST_ELEMENTS)
         np.verify_proofs(None)
 
     def test_decode_proofs(self):
         """ """
-        contents = json_loads_receipt_contents("khipu_receipt_happy_default2.b64")
+        contents = json_loads_receipt_contents("khipu_receipt_happy_default.b64")
         np = NamedProofs(contents)
         np.collect_proofs(*MANIFEST_ELEMENTS)
         np.decode()

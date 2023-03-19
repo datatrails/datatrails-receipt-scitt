@@ -24,7 +24,7 @@ class TestReceiptDecoder(TestCase):
         """
         Test we can get at the payload and that it is valid json
         """
-        b64 = read_text("unittests.data", "khipu_receipt_happy_default2.b64")
+        b64 = read_text("unittests.data", "khipu_receipt_happy_default.b64")
         contents = json.loads(receipt_trie_alg_contents(b64)[1])
         for k in trie_alg.PAYLOAD_KEYS:
             self.assertIn(k, contents)
@@ -37,7 +37,7 @@ class TestReceiptDecoder(TestCase):
         """
         Test we can get at the payload and that it is valid json
         """
-        b64 = read_text("unittests.data", "khipu_receipt_happy_default2.b64")
+        b64 = read_text("unittests.data", "khipu_receipt_happy_default.b64")
         [phdr, sig, contents] = receipt_trie_alg_contents(b64)
         k = key()
 

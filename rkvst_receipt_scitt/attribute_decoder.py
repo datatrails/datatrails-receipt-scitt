@@ -23,20 +23,7 @@ class AttributeType(Enum):
     EVENT = 2
 
 
-def _rlp_decode_bytes(hex_str: str) -> str:
-    """
-    decode an rlp encoded byte array represented as a hexadecimal string
-
-    :param hex str: an rlp encoded hexadecimal string, e.g. 0x8767697261666665
-    """
-    hex_bytes = bytes.fromhex(hex_str[2:])
-
-    decoded = decode(hex_bytes, binary).decode("utf-8")
-
-    return decoded
-
-
-def decode_attribute_value(hex_str: str) -> str | list | dict:
+def decode_attribute_value(attrvalue: bytes) -> str | list | dict:
     """
     decode an rlp encoded attribute value
 
@@ -93,7 +80,7 @@ def decode_attribute_value(hex_str: str) -> str | list | dict:
 
     # first see if its a string value
     try:
-        value = _rlp_decode_bytes(hex_str)
+        value = decode(attrvalue, binary).decode("utf-8")
         return value
     except DeserializationError:
         # if we have a deserialization error here, it means we are not dealing with a string value
@@ -101,14 +88,12 @@ def decode_attribute_value(hex_str: str) -> str | list | dict:
 
     # if its not a string value it must be a list or a dictionary
 
-    hex_bytes = bytes.fromhex(hex_str[2:])
-
     listv2_attribute_value = List([List([binary, binary])])
     dictv2_attribute_value = List([binary, binary])
 
     # if we lazily decode the rlp without a sedes, we can iterate through
     #  each list element decoding them one at a time
-    decoded_value = decode_lazy(hex_bytes, None)
+    decoded_value = decode_lazy(attrvalue, None)
 
     value_type = None
 
@@ -144,7 +129,7 @@ def decode_attribute_value(hex_str: str) -> str | list | dict:
     return list_value
 
 
-def decode_attribute_key(kind_name: str) -> tuple[AttributeType, str]:
+def decode_attribute_key(kind_name: bytes) -> tuple[AttributeType, str]:
     """
     decodes the attribute kind<->name pairing into the attribute kind and key
 
@@ -153,10 +138,9 @@ def decode_attribute_key(kind_name: str) -> tuple[AttributeType, str]:
 
     :returns: a tuple of (attribute type, attribute key)
     """
-    hex_bytes = bytes.fromhex(kind_name[2:])
     kind_name_sedes = List([binary, binary])
 
-    decoded_kind_name = decode(hex_bytes, kind_name_sedes)
+    decoded_kind_name = decode(kind_name, kind_name_sedes)
 
     if decoded_kind_name[0].decode("utf-8") == AttributeType.ASSET.name.lower():
         kind = AttributeType.ASSET

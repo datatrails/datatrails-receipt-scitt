@@ -36,7 +36,7 @@ class NamedProofs:
         self.serviceprams = serviceparams
 
         # name -> the proof elements from the receipt
-        self._named = {}
+        self._proofs = {}
 
         # the raw proof values decoded into (closer) to application format
         self._decoded = {}
@@ -76,7 +76,7 @@ class NamedProofs:
 
         for proof in self.contents[trie_alg.NAMED_PROOFS_KEY]:
             name = proof["name"]
-            self._named[name] = proof
+            self._proofs[name] = proof
             try:
                 required.remove(name)
             except KeyError:
@@ -90,7 +90,7 @@ class NamedProofs:
         verify each of the named proofs. raises VerifyFailed if any fail
         """
 
-        for name, proofelement in self._named.items():
+        for name, proofelement in self._proofs.items():
             try:
                 ethproofs.verify_eth_storage_proof(proofelement["proof"])
             except ethproofs.VerifyFailed:
@@ -98,13 +98,13 @@ class NamedProofs:
 
     def decode(self):
         """
-        decode the proven values using the metadata from the receipt.
+        decode all the proven values using the metadata from the receipt.
 
         typically called after verifying in order to reconstruct application
         data from the proven values.
         """
 
-        for name, proofelement in self._named.items():
+        for name, proofelement in self._proofs.items():
             sp = proofelement["proof"]["storageProof"]
             if proofelement["id"] == elementmetadata.ELEMENT_ID_SLOTARRAY:
                 decoded = elementmetadata.SlotArray(sp, lenlast=None)
@@ -114,3 +114,13 @@ class NamedProofs:
                 decoded = elementmetadata.ByteArrays(sp, proofelement["metadata"])
 
             self._decoded[name] = decoded
+
+    def decoded(self, name):
+        """
+        returns the decoded value container.
+
+        Which will be a SlotArray, a FieldValues or a ByteArrays instance.
+        Typically, the caller will know which type to expect based on context.
+        """
+
+        return self._decoded[name]
