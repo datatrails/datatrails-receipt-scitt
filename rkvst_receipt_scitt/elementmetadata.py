@@ -64,12 +64,8 @@ class SlotArray:
 
         self.values = []
         for proof in storageproofs:
-            # Notice: the proof values omit the 0's from the big end, so we must put them back.
-            # values.append(bytes(HexBytes(proof["value"])).rjust(32, b"\x00"))
             self.values.append(bytes(HexBytes(proof["value"])))
         if lenlast != None and len(storageproofs):
-            # Note that lenlast is relative to the full 32 byte slot length and
-            # we padded appropriate above.
             self.values[-1] = self.values[-1][:lenlast]
 
         self.value = b"".join(self.values)
