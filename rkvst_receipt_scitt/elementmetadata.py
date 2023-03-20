@@ -107,7 +107,7 @@ class ByteArrays:
             count = metadata["slots"][i]
             lenlast = metadata["lenlasts"][i]
             self.arrays.append(
-                SlotArray(storageproofs[start:count], lenlast=lenlast).value
+                SlotArray(storageproofs[start : start + count], lenlast=lenlast).value
             )
             start += count
 

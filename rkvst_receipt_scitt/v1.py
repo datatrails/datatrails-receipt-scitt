@@ -5,6 +5,7 @@ import json
 from rkvst_receipt_scitt.receiptdecoder import receipt_trie_alg_contents
 from rkvst_receipt_scitt.khipureceipt import KhipuReceipt
 
+
 def receipt_verify(opts):
     """
     sub command implementation for verifying, and optionally decoding, a receipt
@@ -17,6 +18,7 @@ def receipt_verify(opts):
         event = r.decode()
         print(json.dumps(event, sort_keys=True, indent="  "))
 
+
 def main(args=None):  # pragma: no cover
     """main"""
 
@@ -24,13 +26,15 @@ def main(args=None):  # pragma: no cover
         args = sys.argv[1:]
 
     p = argparse.ArgumentParser()
-    subs = p.add_subparsers(help='receipt verification and decoding')
+    subs = p.add_subparsers(help="receipt verification and decoding")
     s = subs.add_parser("verify")
-    s.add_argument('-d', '--decode', action='store_true')
+    s.add_argument("-d", "--decode", action="store_true")
     s.add_argument(
-        'receipt', nargs='?',
-        type=argparse.FileType('r'), default=(None if sys.stdin.isatty() else sys.stdin)
-        )
+        "receipt",
+        nargs="?",
+        type=argparse.FileType("r"),
+        default=(None if sys.stdin.isatty() else sys.stdin),
+    )
     s.set_defaults(func=receipt_verify)
 
     opts = p.parse_args(args)
