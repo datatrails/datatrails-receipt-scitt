@@ -1,8 +1,10 @@
 """
 RKVST Khipu event specifics
 """
+import uuid
 from datetime import datetime
 import rfc3339
+from eth_utils import to_checksum_address
 
 from . import trie_alg
 from .namedproofs import NamedProofs
@@ -19,12 +21,22 @@ class KhipuReceiptMalformedAttributes(ValueError):
     """
 
 
+class KhipuReceiptMalformedValue(ValueError):
+    """
+    The receipt encoding of a storage value is not as expected
+    """
+
+
 EXTRA_PARAMETERS = ["monotonic_version"]
 APPLICATION_PARAMETERS = trie_alg.APPLICATION_PARAMETERS + EXTRA_PARAMETERS
 MANIFEST_ELEMENTS = "who_declared who_accepted essentials attribute_kindnames attribute_values when".split()
 
 ATTRIBUTE_KINDNAMES = "attribute_kindnames"
 ATTRIBUTE_VALUES = "attribute_values"
+ESSENTIALS = "essentials"
+ESSENTIALS_CREATOR = "creator"
+ESSENTIALS_KHIPUIDENTITY = "khipuIdentity"
+ESSENTIALS_ASSETIDENTITY = "assetIdentity"
 
 iWHO_ISSUER = 0
 iWHO_SUBJECT = 1
@@ -72,6 +84,20 @@ def _whens_from_rawstorage(rawstorage):
     }
 
 
+def _u256touuid(b: bytes) -> str:
+    """
+    convert a 32 byte value from khipu event storage to a uuid
+    """
+    if len(b) != 32:
+        raise KhipuReceiptMalformedValue(
+            f"expected 32 bytes for a uuid storage value not {len(b)}"
+        )
+
+    b = b[16:]  # the high bytes are zero
+
+    return uuid.UUID(int=int.from_bytes(b, "big"))
+
+
 class KhipuReceipt:
     def __init__(self, contents, serviceparams=None):
         self.namedproofs = NamedProofs(contents, serviceparams=serviceparams)
@@ -117,6 +143,13 @@ class KhipuReceipt:
             # Note we don't currently include the aggregate sharing policy
             # attributes in the receipt. We may do in future.
 
+        essentials = self.namedproofs.decoded(ESSENTIALS)
+        creator = to_checksum_address(
+            essentials.value(ESSENTIALS_CREATOR)
+        )  # aka from address
+        eventUUID = _u256touuid(essentials.value(ESSENTIALS_KHIPUIDENTITY))
+        assetUUID = _u256touuid(essentials.value(ESSENTIALS_ASSETIDENTITY))
+
         # TODO: missing the khipu schema version number 'monotonicversion'
         who_declared = self.namedproofs.decoded("who_declared")
         who_accepted = self.namedproofs.decoded("who_accepted")
@@ -126,6 +159,9 @@ class KhipuReceipt:
         # work with in the rkvst-simplehash-python package.  see
         # rkvst_simplehash.V1_FIELDS (in v1.py)
         event = {
+            "identity": f"assets/{assetUUID}/events/{eventUUID}",
+            "asset_identity": f"assets/{assetUUID}",
+            "from": creator,
             "principal_declared": _principal_from_rawstorage(who_declared.arrays),
             "principal_accepted": _principal_from_rawstorage(who_accepted.arrays),
             "asset_attributes": assetattributes,

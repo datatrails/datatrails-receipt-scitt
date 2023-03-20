@@ -140,6 +140,8 @@ class FieldValues:
 
             slotvalue = self._slotvalues[islotvalue]
             name, offset, size = field["name"], field["offset"], field["size"]
+            # we should do this in the backend, the low address of the 32 byte word is on the 'right'
+            offset = 32 - offset - size
             fieldvalue = slotvalue[offset : offset + size]
 
             self._fields[name] = dict(
