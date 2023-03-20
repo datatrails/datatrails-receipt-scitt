@@ -65,7 +65,7 @@ class SlotArray:
         self.values = []
         for proof in storageproofs:
             self.values.append(bytes(HexBytes(proof["value"])))
-        if lenlast != None and len(storageproofs):
+        if lenlast is not None and len(storageproofs):
             self.values[-1] = self.values[-1][:lenlast]
 
         self.value = b"".join(self.values)
