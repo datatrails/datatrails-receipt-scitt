@@ -38,14 +38,14 @@ ESSENTIALS_CREATOR = "creator"
 ESSENTIALS_KHIPUIDENTITY = "khipuIdentity"
 ESSENTIALS_ASSETIDENTITY = "assetIdentity"
 
-iWHO_ISSUER = 0
-iWHO_SUBJECT = 1
-iWHO_DISPLAY_NAME = 2
-iWHO_EMAIL = 3
+WHO_ISSUER = 0
+WHO_SUBJECT = 1
+WHO_DISPLAY_NAME = 2
+WHO_EMAIL = 3
 
-iWHEN_DECLARED = 0
-iWHEN_ACCEPTED = 1
-iWHEN_COMMITTED = 2
+WHEN_DECLARED = 0
+WHEN_ACCEPTED = 1
+WHEN_COMMITTED = 2
 
 
 def _principal_from_rawstorage(rawstorage):
@@ -53,10 +53,10 @@ def _principal_from_rawstorage(rawstorage):
     :param rawstorage: the 4 element list of strings representing a principal
     """
     return {
-        "issuer": rawstorage[iWHO_ISSUER].decode("utf-8"),
-        "subject": rawstorage[iWHO_SUBJECT].decode("utf-8"),
-        "display_name": rawstorage[iWHO_DISPLAY_NAME].decode("utf-8"),
-        "email": rawstorage[iWHO_EMAIL].decode("utf-8"),
+        "issuer": rawstorage[WHO_ISSUER].decode("utf-8"),
+        "subject": rawstorage[WHO_SUBJECT].decode("utf-8"),
+        "display_name": rawstorage[WHO_DISPLAY_NAME].decode("utf-8"),
+        "email": rawstorage[WHO_EMAIL].decode("utf-8"),
     }
 
 
@@ -77,10 +77,11 @@ def _whens_from_rawstorage(rawstorage):
     # rkvst_simplehash.V1_FIELDS (in v1.py) defines constants for these dict
     # keys these in alignment with the public rkvst events api
     return {
-        "timestamp_declared": _bto3339(rawstorage[iWHEN_DECLARED]),
-        "timestamp_accepted": _bto3339(rawstorage[iWHEN_ACCEPTED]),
-        # scale down by 1000,000,000 due to use of raft
-        "timestamp_committed": _bto3339(rawstorage[iWHEN_COMMITTED], scale=1000000000),
+        "timestamp_declared": _bto3339(rawstorage[WHEN_DECLARED]),
+        "timestamp_accepted": _bto3339(rawstorage[WHEN_ACCEPTED]),
+        # scale down by 1000,000,000. raft block time stamps are in nanoseconds
+        # and we need seconds to do the RFC 3339 conversion
+        "timestamp_committed": _bto3339(rawstorage[WHEN_COMMITTED], scale=1000000000),
     }
 
 
@@ -100,6 +101,42 @@ def _u256touuid(b: bytes) -> str:
 
 class KhipuReceipt:
     def __init__(self, contents, serviceparams=None):
+        """
+        This class uses the EIP1186 *neutral* receipt format to encode a receipt for an RKVST 'khipu' event.
+
+        serviceparams and contents are as per draft-birkholz-scitt-receipts 2. "Common parameters" & 3. "Generic Receipt Structure".
+
+        But in essence the serviceparams identify the service and the appropriate interpretation of contents. Here,
+        our trie-alg is cEIP1186NamedProofs and the basic structure of the contents is:
+
+        {
+          application_parameters: {
+             app_id: trusted service application identifier,
+             app_content_ref: trusted service application references,
+             element_manifest: [] the complete set of app-defined-names, 1:1 associative with named_proofs
+          },
+          block: hex-str block number the proof was read from
+          account: the contract account the proof was read from
+          named_proofs: [ list of named proofs, 1 per entry in element_manifest
+             {
+                name: app-defined-name
+                id: proof-element-id - one of the three trie alg intrinsics defined in elementmetadata.py or app specific defined by app_content_ref
+
+                ... one or more EIP 1186 merkle inclusion proofs and supporting
+                metadata
+             }
+          ]
+        ]
+
+        For serviceparams to be fully compliant we need at least two items here:
+        * a permanent service identifier (likely app.rkvst.io)
+        * the trie alg defining the format of contents, currently EIP1186NamedProofs
+
+        But the implementation simply assumes this for now.
+
+        :param contents: this is the trie-alg "EIP1186NamedProofs" defined receipt contents
+        :param serviceparams: the service parameters required by draft-birkholz-scitt-receipts 2. "Common parameters"
+        """
         self.namedproofs = NamedProofs(contents, serviceparams=serviceparams)
 
     def verify(self):

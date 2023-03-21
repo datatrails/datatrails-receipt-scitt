@@ -41,10 +41,10 @@ class TestKhipuReceipt(TestCase):
             self.assertEqual(event["principal_accepted"][k], v)
 
         self.assertIn("timestamp_accepted", event)
-        self.assertGreater(len(event["timestamp_accepted"]), 0)
+        self.assertEqual(event["timestamp_accepted"], "2023-02-10T08:14:49+00:00")
         self.assertIn("timestamp_declared", event)
-        self.assertGreater(len(event["timestamp_declared"]), 0)
+        self.assertEqual(event["timestamp_declared"], "2023-02-10T08:14:20+00:00")
         self.assertIn("timestamp_committed", event)
-        self.assertGreater(len(event["timestamp_committed"]), 0)
+        self.assertEqual(event["timestamp_committed"], "2023-03-19T10:33:27+00:00")
         self.assertEqual(event["asset_attributes"][LONG_ANIMAL_NAME_KEY], "giraffe")
         print(json.dumps(event, sort_keys=True, indent="  "))

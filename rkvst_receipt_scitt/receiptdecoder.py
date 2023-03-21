@@ -54,8 +54,8 @@ def receipt_verify_envelope(
     See unittests/wellknownkey.py for why this is only by way of example and not required.
 
     This does _NOT_ verify the contents according to the trie alg, simply that
-    the contents, treated as an opaque blob, have been signed by the TS, along
-    with the protected headers.
+    the contents, treated as an opaque blob, have been signed by the trusted
+    service, along with the protected headers.
 
     There are currently no unprotected headers defined
 

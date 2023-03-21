@@ -1,4 +1,6 @@
-""" Module for decoding on chain attributes into the format returned from the event api"""
+"""
+Module for decoding on chain attributes into the format returned from the event api
+"""
 
 from __future__ import annotations
 
@@ -31,51 +33,51 @@ def decode_attribute_value(attrvalue: bytes) -> str | list | dict:
                     e.g. 0xe5866c6973747632cecd87676972...
 
     :returns: either:
-       * a string value
-       * a dictionary value
-       * a list of dictionary values
+      * a string value
+      * a dictionary value
+      * a list of dictionary values
 
     the rlp encoded list value is of the shape:
 
-    [][][]string {
-      [
-        "listv2"
-      ],
-      [
+      [][][]string {
         [
+          "listv2"
+        ],
+        [
+          [
+            [
+              "giraffe", <- key
+              "tall" <- value
+            ],
+          ],
+        ],
+        [
+          [
+            [
+              "elephant", <- key
+              "big" <- value
+            ],
+          ],
+        ]
+      }
+
+    the rlp encoded dict value is of the shape:
+
+      [][]string {
+        [
+          [
+            "dictv2",
+          ],
           [
             "giraffe", <- key
             "tall" <- value
           ],
-        ],
-      ],
-      [
-        [
           [
             "elephant", <- key
             "big" <- value
-          ],
-        ],
-      ]
-    }
-
-    the rlp encoded dict value is of the shape:
-
-    [][]string {
-      [
-        [
-          "dictv2",
-        ],
-        [
-          "giraffe", <- key
-          "tall" <- value
-        ],
-        [
-          "elephant", <- key
-          "big" <- value
+          ]
         ]
-      ]
-    }
+      }
     """
 
     # first see if its a string value
@@ -130,13 +132,10 @@ def decode_attribute_value(attrvalue: bytes) -> str | list | dict:
 
 
 def decode_attribute_key(kind_name: bytes) -> tuple[AttributeType, str]:
-    """
-    decodes the attribute kind<->name pairing into the attribute kind and key
+    """Decodes the attribute kind<->name pairing into the attribute kind and key
 
-    :param kind_name str: the rlp encoded attribute kind concatenated with the attribute key
-                          encoded as a hex string, e.g. 0x8767697261666665...
-
-    :returns: a tuple of (attribute type, attribute key)
+    :param kind_name: str the rlp encoded attribute kind concatenated with the attribute key encoded as a hex string, e.g. 0x8767697261666665...
+    :return: a tuple of (attribute type, attribute key)
     """
     kind_name_sedes = List([binary, binary])
 

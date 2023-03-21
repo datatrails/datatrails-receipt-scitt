@@ -44,7 +44,7 @@ class SlotArray:
     The individual slot values are available in .values
     """
 
-    def __init__(self, storageproofs, lenlast=None):
+    def __init__(self, storageproofs: list, lenlast: int = None):
         """
         The list of proofs in storageproof is treated a list of slots where the
         raw values are the application bytes.
@@ -76,7 +76,7 @@ class ByteArrays:
     Helper for eip1186:3:loba
     """
 
-    def __init__(self, storageproofs, metadata):
+    def __init__(self, storageproofs: list, metadata: dict):
         """
         The list of proofs in storage proof proves the presence of a *list* of
         byte arrays. The metadata contains a slot count for *each* byte array.
@@ -93,6 +93,9 @@ class ByteArrays:
         remaining 5 proof values.
 
         The last slot of each respective array has 28 bytes, 3 bytes and finally exactly  32 bytes
+
+        :param storageproofs: the list of storage proofs, typically ["proof"]["storageProof"] from the EIP 1186 response
+        :param metadata: the metadata for id eip1186:loba describing the layout of the proven values
         """
 
         # The metadata uses associative arrays rather than structured objects as
@@ -117,7 +120,45 @@ class FieldValues:
     Helper for eip1186:2:fv
     """
 
-    def __init__(self, storageproofs, metadata):
+    def __init__(self, storageproofs: list, metadata: dict):
+        """
+        The list of proofs in storage proof proves the presence of an array of
+        storage slots backing a solidity ABI structure. The metadata defines the
+        variable field structure in those slots (but does not currently contain
+        the original type info)
+
+        For example:
+
+        metadata: {
+            fields: [
+                { "name": "foo", "slot": 0, "offset": 0, "size": 2},
+                { "name": "bar", "slot": 0, "offset": 2, "size": 4},
+                { "name": "baz", "slot": 1, "offset": 0, "size": 32}
+            }
+        }
+
+        Defines the variables foo, bar and baz. foo and bar are packed into the
+        first slot. Due to occupying a full 32 byte slot, baz.
+
+        Notes:
+            a) In the current rkvst useage fields occupied by nested slots are
+            typically omitted and dealt with as a special case (who & when). We
+            may in future allow size to be a multiple of 32 to allow for inline
+            nested structs.
+
+            b) the offset is from the low register address, which frustratingly
+            is at the right end of the word. Eg the offsets should actually be
+            visualized like this. (We intend to change the backend to make this
+            more intuitive)
+
+                |31|30 ... 2|1|0|
+
+            c) we plan to add the original solidity type names in a future
+            backend release.
+
+        :param storageproofs: the list of storage proofs, typically ["proof"]["storageProof"] from the EIP 1186 response
+        :param metadata: the metadata for id eip1186:fv describing the layout of the proven values
+        """
 
         self._fields = {}
         self._slotvalues = []
@@ -154,13 +195,13 @@ class FieldValues:
         """return the list of field names"""
         return list(self._fields.keys())
 
-    def value(self, name):
+    def value(self, name: str):
         """
         return the value of the field
         """
         return self._fields[name]["value"]
 
-    def __getattr__(self, name):
+    def __getattr__(self, name: str):
         """
         dynamic attribute access to the fields by name
         """
