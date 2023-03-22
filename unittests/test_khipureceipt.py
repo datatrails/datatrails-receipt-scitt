@@ -21,7 +21,9 @@ class TestKhipuReceipt(TestCase):
     """TestNamedProofs"""
 
     def test_decode_receipt(self):
-        """ """
+        """
+        test that we can verify and decode the receipt
+        """
         contents = json_loads_receipt_contents("khipu_receipt_happy_default.b64")
         kr = KhipuReceipt(contents)
         kr.verify()
@@ -45,6 +47,6 @@ class TestKhipuReceipt(TestCase):
         self.assertIn("timestamp_declared", event)
         self.assertEqual(event["timestamp_declared"], "2023-02-10T08:14:20+00:00")
         self.assertIn("timestamp_committed", event)
-        self.assertEqual(event["timestamp_committed"], "2023-03-19T10:33:27+00:00")
+        self.assertEqual(event["timestamp_committed"], "2023-03-21T22:07:28+00:00")
         self.assertEqual(event["asset_attributes"][LONG_ANIMAL_NAME_KEY], "giraffe")
         print(json.dumps(event, sort_keys=True, indent="  "))

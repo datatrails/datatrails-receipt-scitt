@@ -140,6 +140,7 @@ class KhipuReceipt:
         self.namedproofs = NamedProofs(contents, serviceparams=serviceparams)
 
     def verify(self):
+        # TODO: pass in stateroot and timestamp so caller can provide it from block header
         self.namedproofs.collect_proofs(*MANIFEST_ELEMENTS)
         self.namedproofs.verify_proofs(None)
 
