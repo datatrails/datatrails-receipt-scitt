@@ -60,7 +60,7 @@ def verify_eth_account_proof(account: str, ethproof: dict, root: HexBytes):
         if rlp_account != HexaryTrie.get_from_proof(root, trie_key, proof):
             raise VerifyFailed(f"Failed to verify account proof for {account}")
     except BadTrieProof as e:
-        raise VerifyFailed(f"Failed to verify account proof for {account}")
+        raise VerifyFailed(f"Failed to verify account proof for {account}") from e
 
 
 def verify_eth_storage_proof(ethproof):
