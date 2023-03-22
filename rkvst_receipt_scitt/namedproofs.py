@@ -41,7 +41,18 @@ class NamedProofs:
         # the raw proof values decoded into (closer) to application format
         self._decoded = {}
 
+    @property
+    def proofs(self):
+        """property accessor for _proofs"""
+        return self._proofs.copy()
+
+    @property
+    def decodedvalues(self):
+        """property accessor for decoded proven values"""
+        return self._decoded.copy()
+
     def check_payload_keys(self):
+        """checks the payload has the required top level keys"""
 
         for k in trie_alg.PAYLOAD_KEYS:
             if k not in self.contents:
@@ -85,15 +96,18 @@ class NamedProofs:
         if required:
             raise NamedProofsMissingProof(f"{', '.join(list(required))}")
 
-    def verify_proofs(self, blockheader):
+    def verify_proofs(self, stateroot, timestamp):
         """
         verify each of the named proofs. raises VerifyFailed if any fail
         """
+
+        # pylint: disable="unused-argument"
 
         for name, proofelement in self._proofs.items():
             try:
                 ethproofs.verify_eth_storage_proof(proofelement["proof"])
             except ethproofs.VerifyFailed:
+                # pylint: disable="raise-missing-from"
                 raise ethproofs.VerifyFailed(f"Failed to verify {name}")
 
     def decode(self):

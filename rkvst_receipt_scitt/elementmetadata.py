@@ -36,6 +36,9 @@ class MetadataError(Exception):
     """
 
 
+# pylint
+
+
 class SlotArray:
     """
     Helper for eip1186:1:sa
@@ -58,8 +61,10 @@ class SlotArray:
          * a storage proof for a solidity dynamic array of bytes (string or bytes)
          * a storage proof for a struct whose fields are all uint256
 
-        :param storageproof: The storageProofs field from the EIP1186 response, its a list of merkle proofs
-        :param lenlast: If the number of bytes stored in the last slot is known the last slot can be trimmed
+        :param storageproof: The storageProofs field from the EIP1186 response,
+        its a list of merkle proofs
+        :param lenlast: If the number of bytes stored in the last slot is known
+        the last slot can be trimmed
         """
 
         self.values = [bytes(HexBytes(proof["value"])) for proof in storageproofs]
@@ -90,17 +95,20 @@ class ByteArrays:
         first 3 proofs, the second proof values 3 & 4, and the last takes the
         remaining 5 proof values.
 
-        The last slot of each respective array has 28 bytes, 3 bytes and finally exactly  32 bytes
+        The last slot of each respective array has 28 bytes, 3 bytes and finally
+        exactly  32 bytes
 
-        :param storageproofs: the list of storage proofs, typically ["proof"]["storageProof"] from the EIP 1186 response
-        :param metadata: the metadata for id eip1186:loba describing the layout of the proven values
+        :param storageproofs: the list of storage proofs, typically
+        ["proof"]["storageProof"] from the EIP 1186 response
+        :param metadata: the metadata for id eip1186:loba describing the layout
+        of the proven values
         """
 
         # The metadata uses associative arrays rather than structured objects as
         # it keeps the size of the metadata down. It also makes it more
         # composable and open for extension.
         if len(metadata["slots"]) != len(metadata["lenlasts"]):
-            raise MetadataError(f"mismatched slots and 'length last slot' counts")
+            raise MetadataError("mismatched slots and 'length last slot' counts")
 
         self.arrays = []
         start = 0

@@ -100,10 +100,12 @@ def _u256touuid(b: bytes) -> str:
 
 
 class KhipuReceipt:
+    """
+    This class uses the EIP1186 *neutral* receipt format to encode a receipt for an RKVST 'khipu' event.
+    """
+
     def __init__(self, contents, serviceparams=None):
         """
-        This class uses the EIP1186 *neutral* receipt format to encode a receipt for an RKVST 'khipu' event.
-
         serviceparams and contents are as per draft-birkholz-scitt-receipts 2. "Common parameters" & 3. "Generic Receipt Structure".
 
         But in essence the serviceparams identify the service and the appropriate interpretation of contents. Here,
@@ -139,12 +141,16 @@ class KhipuReceipt:
         """
         self.namedproofs = NamedProofs(contents, serviceparams=serviceparams)
 
-    def verify(self):
+    def verify(self, stateroot=None, timestamp=None):
+        """Verify the named proofs"""
         # TODO: pass in stateroot and timestamp so caller can provide it from block header
+        self.namedproofs.check_payload_keys()
+        self.namedproofs.check_application_parameters()
         self.namedproofs.collect_proofs(*MANIFEST_ELEMENTS)
-        self.namedproofs.verify_proofs(None)
+        self.namedproofs.verify_proofs(stateroot, timestamp)
 
     def decode(self):
+        """decode the application values from the proof"""
         self.namedproofs.decode()
 
         # Now use RKVST API assumptions to rebuild the event and asset attributes map

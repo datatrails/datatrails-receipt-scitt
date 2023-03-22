@@ -26,7 +26,6 @@ from typing import Tuple
 import base64
 import cbor2.decoder
 from pycose.messages.sign1message import Sign1Message
-from pycose import headers
 
 
 def receipt_trie_alg_contents(receiptb64: str) -> Tuple[Sign1Message, bytes]:
