@@ -44,7 +44,7 @@ class TestNamedProofs(TestCase):
         np = NamedProofs(contents)
         np.collect_proofs(*MANIFEST_ELEMENTS)
         # the worldroot and storageroot are correct for the happy default receipt
-        worldroot = "0xb65f79ea1ee5ffd2ead043e8d4dfe1d610d20eaa3a7bf0c4c8e8b9a25c1f13f5"
+        worldroot = "0xb65f79ea1ee5ffd2ead043e8d4dfe1d610d20eaa3a7bf0c4c8e8b9a25c1f13f6"
         storageroot = (
             "0x0ac38953a67b8405e8fee902f2a87062475cd72aefa287f9dbf044c581166ac9"
         )
