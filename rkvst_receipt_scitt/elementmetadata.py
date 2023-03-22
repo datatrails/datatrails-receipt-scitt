@@ -8,7 +8,8 @@ representation.
 
 The three formats defined here are intrinsic to this trie algorithm. They are
 defined to be application neutral. They focus on recovering the proven application
-values from the receipts without recourse to application domain knowledge. Just
+values from the receipts without :192
+recourse to application domain knowledge. Just
 knowledge of the EVM and the solidity compiler abi.
 
 Applications (including the RKVST) are free to define new element types but

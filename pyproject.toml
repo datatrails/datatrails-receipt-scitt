@@ -364,6 +364,7 @@ confidence = ["HIGH", "CONTROL_FLOW", "INFERENCE", "INFERENCE_FAILURE", "UNDEFIN
 # --disable=W".
 disable = [
     "bad-inline-option",
+    "broad-exception-caught",
     "deprecated-pragma",
     "file-ignored",
     "fixme",
@@ -373,6 +374,7 @@ disable = [
     "raw-checker-failed",
     "suppressed-message",
     "too-few-public-methods",
+    "use-dict-literal",
     "use-symbolic-message-instead",
     "useless-suppression",
     "consider-using-f-string"

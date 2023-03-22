@@ -6,9 +6,10 @@ import json
 
 from unittest import TestCase
 
+from rkvst_receipt_scitt.khipureceipt import KhipuReceipt
+
 from .datautils import json_loads_receipt_contents
 
-from rkvst_receipt_scitt.khipureceipt import KhipuReceipt
 
 LONG_ANIMAL_NAME_KEY = "animal xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
 DISPLAY_NAME = "test rkvst"
