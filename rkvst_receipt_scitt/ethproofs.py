@@ -24,7 +24,7 @@ class VerifyFailed(Exception):
     """raised if a proof verification operation fails"""
 
 
-def verify_eth_account_proof(account:str, ethproof: dict, root: HexBytes):
+def verify_eth_account_proof(account: str, ethproof: dict, root: HexBytes):
     """
     verifies the given account proof with the given root
 
