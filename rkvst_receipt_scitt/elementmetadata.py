@@ -62,9 +62,7 @@ class SlotArray:
         :param lenlast: If the number of bytes stored in the last slot is known the last slot can be trimmed
         """
 
-        self.values = []
-        for proof in storageproofs:
-            self.values.append(bytes(HexBytes(proof["value"])))
+        self.values = [bytes(HexBytes(proof["value"])) for proof in storageproofs]
         if lenlast is not None and len(storageproofs):
             self.values[-1] = self.values[-1][:lenlast]
 
@@ -106,9 +104,7 @@ class ByteArrays:
 
         self.arrays = []
         start = 0
-        for i in range(len(metadata["slots"])):
-            count = metadata["slots"][i]
-            lenlast = metadata["lenlasts"][i]
+        for count, lenlast in zip(metadata["slots"], metadata["lenlasts"]):
             self.arrays.append(
                 SlotArray(storageproofs[start : start + count], lenlast=lenlast).value
             )
@@ -193,7 +189,7 @@ class FieldValues:
 
     def fields(self):
         """return the list of field names"""
-        return list(self._fields.keys())
+        return list(self._fields)
 
     def value(self, name: str):
         """

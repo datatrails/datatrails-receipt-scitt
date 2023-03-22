@@ -55,10 +55,7 @@ exclude_patterns = [
     "_build",
     "Thumbs.db",
     ".DS_Store",
-    "scripts",
-    "unittests",
-    "functests",
-    "**.ipynb_checkpoints",
+    "unittests"
 ]
 
 source_suffix = [".md", ".rst"]
