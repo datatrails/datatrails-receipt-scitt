@@ -37,16 +37,16 @@ def key():
     """
     Returns a key object for the well known pem
     """
-    key = load_pem_private_key(WELLKNOWN_PEM_KEY.encode(), password=None)
+    pemkey = load_pem_private_key(WELLKNOWN_PEM_KEY.encode(), password=None)
 
-    if key.curve.name != "secp256r1":
+    if pemkey.curve.name != "secp256r1":
         raise ValueError("unexpected key type")
 
     # TODO: There must be a better way to load a PEM for pycose, this is super
     # frustrating. I imagine it is to avoid the osl dependency.
-    d = _itobig(key.private_numbers().private_value)
-    x = _itobig(key.public_key().public_numbers().x)
-    y = _itobig(key.public_key().public_numbers().y)
+    d = _itobig(pemkey.private_numbers().private_value)
+    x = _itobig(pemkey.public_key().public_numbers().x)
+    y = _itobig(pemkey.public_key().public_numbers().y)
     eckey = ec2.EC2(crv=P256, d=d, x=x, y=y)
     eckey.alg = Es256
     return eckey

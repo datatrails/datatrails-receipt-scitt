@@ -159,12 +159,7 @@ class KhipuReceipt:
         assetattributes = {}
         eventattributes = {}
 
-        for i in range(len(kindnames)):
-
-            kindname, rlpvalue = kindnames[i], values[i]
-
-            if len(kindname) == 0 and len(rlpvalue) == 0:
-                continue
+        for kindname, rlpvalue in zip(kindnames, values):
 
             kind, name = decode_attribute_key(kindname)
 

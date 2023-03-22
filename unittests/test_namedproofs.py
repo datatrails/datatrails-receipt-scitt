@@ -53,4 +53,4 @@ class TestNamedProofs(TestCase):
         for name in np._decoded.keys():
             want.pop(name)
 
-        self.assertEquals(len(want), 0)
+        self.assertEqual(len(want), 0)

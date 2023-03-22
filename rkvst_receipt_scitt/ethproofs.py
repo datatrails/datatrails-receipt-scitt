@@ -24,7 +24,7 @@ class VerifyFailed(Exception):
     """raised if a proof verification operation fails"""
 
 
-def verify_eth_account_proof(account, ethproof: dict, root: HexBytes):
+def verify_eth_account_proof(account:str, ethproof: dict, root: HexBytes):
     """
     verifies the given account proof with the given root
 
@@ -53,7 +53,7 @@ def verify_eth_account_proof(account, ethproof: dict, root: HexBytes):
     )
     rlp_account = rlp.encode(acc)
     account = to_checksum_address(account)
-    trie_key = keccak(bytes.fromhex(account[2:]))
+    trie_key = keccak(hexstr=account)
 
     proof = [rlp.decode(bytes(HexBytes(node))) for node in ethproof["accountProof"]]
 
