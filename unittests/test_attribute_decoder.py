@@ -11,6 +11,10 @@ from rkvst_receipt_scitt.attribute_decoder import (
 )
 
 
+def _tobytes(hex_str):
+    return bytes.fromhex(hex_str[2:])
+
+
 class TestKATAttributeDecoder(TestCase):
     """
     Known Answer Tests (KAT) for attribute decoding
@@ -47,7 +51,9 @@ class TestKATAttributeDecoder(TestCase):
         from a known rlp encoded kindname.
         """
 
-        attribute_type, attribute_key = decode_attribute_key(self.known_kindname)
+        attribute_type, attribute_key = decode_attribute_key(
+            _tobytes(self.known_kindname)
+        )
 
         self.assertEqual(
             self.known_attribute_type, attribute_type, msg="unexpected attribute type"
@@ -63,7 +69,9 @@ class TestKATAttributeDecoder(TestCase):
         from a known rlp encoded attribute value.
         """
 
-        attribute_value = decode_attribute_value(self.known_encoded_attribute_string)
+        attribute_value = decode_attribute_value(
+            _tobytes(self.known_encoded_attribute_string)
+        )
 
         self.assertEqual(
             self.known_attribute_string,
@@ -77,7 +85,9 @@ class TestKATAttributeDecoder(TestCase):
         from a known rlp encoded attribute value.
         """
 
-        attribute_value = decode_attribute_value(self.known_encoded_attribute_list)
+        attribute_value = decode_attribute_value(
+            _tobytes(self.known_encoded_attribute_list)
+        )
 
         self.assertEqual(
             self.known_attribute_list, attribute_value, msg="unexpected attribute value"
@@ -89,7 +99,9 @@ class TestKATAttributeDecoder(TestCase):
         from a known rlp encoded attribute value.
         """
 
-        attribute_value = decode_attribute_value(self.known_encoded_attribute_dict)
+        attribute_value = decode_attribute_value(
+            _tobytes(self.known_encoded_attribute_dict)
+        )
 
         self.assertEqual(
             self.known_attribute_dict, attribute_value, msg="unexpected attribute value"

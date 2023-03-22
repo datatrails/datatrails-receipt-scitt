@@ -1,4 +1,6 @@
-""" Module for decoding on chain attributes into the format returned from the event api"""
+"""
+Module for decoding on chain attributes into the format returned from the event api
+"""
 
 from __future__ import annotations
 
@@ -23,20 +25,7 @@ class AttributeType(Enum):
     EVENT = 2
 
 
-def _rlp_decode_bytes(hex_str: str) -> str:
-    """
-    decode an rlp encoded byte array represented as a hexadecimal string
-
-    :param hex str: an rlp encoded hexadecimal string, e.g. 0x8767697261666665
-    """
-    hex_bytes = bytes.fromhex(hex_str[2:])
-
-    decoded = decode(hex_bytes, binary).decode("utf-8")
-
-    return decoded
-
-
-def decode_attribute_value(hex_str: str) -> str | list | dict:
+def decode_attribute_value(attrvalue: bytes) -> str | list | dict:
     """
     decode an rlp encoded attribute value
 
@@ -44,56 +33,56 @@ def decode_attribute_value(hex_str: str) -> str | list | dict:
                     e.g. 0xe5866c6973747632cecd87676972...
 
     :returns: either:
-       * a string value
-       * a dictionary value
-       * a list of dictionary values
+      * a string value
+      * a dictionary value
+      * a list of dictionary values
 
     the rlp encoded list value is of the shape:
 
-    [][][]string {
-      [
-        "listv2"
-      ],
-      [
+      [][][]string {
         [
+          "listv2"
+        ],
+        [
+          [
+            [
+              "giraffe", <- key
+              "tall" <- value
+            ],
+          ],
+        ],
+        [
+          [
+            [
+              "elephant", <- key
+              "big" <- value
+            ],
+          ],
+        ]
+      }
+
+    the rlp encoded dict value is of the shape:
+
+      [][]string {
+        [
+          [
+            "dictv2",
+          ],
           [
             "giraffe", <- key
             "tall" <- value
           ],
-        ],
-      ],
-      [
-        [
           [
             "elephant", <- key
             "big" <- value
-          ],
-        ],
-      ]
-    }
-
-    the rlp encoded dict value is of the shape:
-
-    [][]string {
-      [
-        [
-          "dictv2",
-        ],
-        [
-          "giraffe", <- key
-          "tall" <- value
-        ],
-        [
-          "elephant", <- key
-          "big" <- value
+          ]
         ]
-      ]
-    }
+      }
     """
 
     # first see if its a string value
     try:
-        value = _rlp_decode_bytes(hex_str)
+        value = decode(attrvalue, binary).decode("utf-8")
         return value
     except DeserializationError:
         # if we have a deserialization error here, it means we are not dealing with a string value
@@ -101,14 +90,12 @@ def decode_attribute_value(hex_str: str) -> str | list | dict:
 
     # if its not a string value it must be a list or a dictionary
 
-    hex_bytes = bytes.fromhex(hex_str[2:])
-
     listv2_attribute_value = List([List([binary, binary])])
     dictv2_attribute_value = List([binary, binary])
 
     # if we lazily decode the rlp without a sedes, we can iterate through
     #  each list element decoding them one at a time
-    decoded_value = decode_lazy(hex_bytes, None)
+    decoded_value = decode_lazy(attrvalue, None)
 
     value_type = None
 
@@ -144,19 +131,15 @@ def decode_attribute_value(hex_str: str) -> str | list | dict:
     return list_value
 
 
-def decode_attribute_key(kind_name: str) -> tuple[AttributeType, str]:
-    """
-    decodes the attribute kind<->name pairing into the attribute kind and key
+def decode_attribute_key(kind_name: bytes) -> tuple[AttributeType, str]:
+    """Decodes the attribute kind<->name pairing into the attribute kind and key
 
-    :param kind_name str: the rlp encoded attribute kind concatenated with the attribute key
-                          encoded as a hex string, e.g. 0x8767697261666665...
-
-    :returns: a tuple of (attribute type, attribute key)
+    :param kind_name: str the rlp encoded attribute kind concatenated with the attribute key encoded as a hex string, e.g. 0x8767697261666665...
+    :return: a tuple of (attribute type, attribute key)
     """
-    hex_bytes = bytes.fromhex(kind_name[2:])
     kind_name_sedes = List([binary, binary])
 
-    decoded_kind_name = decode(hex_bytes, kind_name_sedes)
+    decoded_kind_name = decode(kind_name, kind_name_sedes)
 
     if decoded_kind_name[0].decode("utf-8") == AttributeType.ASSET.name.lower():
         kind = AttributeType.ASSET

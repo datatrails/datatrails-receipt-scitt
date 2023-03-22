@@ -2,12 +2,17 @@
 .. _readme:
 
 RKVST Scitt Receipt Verification in python
-============================
+==========================================
 
 Prescribed python code that defines the verification of scitt receipts for rkvst events.
 
-Support
-=========
+
+**Notice**: This work is based on the *draft* standard draft-birkholz-scitt-receipts-02_ . This work and the upstream standard will evolve. We make no current promise of api stability
+
+.. _draft-birkholz-scitt-receipts-02: https://datatracker.ietf.org/doc/draft-birkholz-scitt-receipts/
+
+Python Support
+==============
 
 This package currently is tested against Python versions 3.7,3.8,3.9, 3.10 and 3.11.
 
