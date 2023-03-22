@@ -127,7 +127,9 @@ class NamedProofs:
 
             if worldroot:
                 ethproofs.verify_eth_account_proof(
-                    self.contents["account"], proofelement["proof"], decode_hex(worldroot)
+                    self.contents["account"],
+                    proofelement["proof"],
+                    decode_hex(worldroot),
                 )
 
     def decode(self):
