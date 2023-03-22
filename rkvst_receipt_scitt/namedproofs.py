@@ -4,6 +4,7 @@ defined for the receipt by the RKVST  EIP1186namedProofs Tree algorithm.
 
 See khipureceipt.py or simplehashreceipt.py for rkvst specific conveniences.
 """
+from eth_utils import decode_hex
 from . import trie_alg
 from . import ethproofs
 from . import elementmetadata
@@ -96,19 +97,38 @@ class NamedProofs:
         if required:
             raise NamedProofsMissingProof(f"{', '.join(list(required))}")
 
-    def verify_proofs(self, stateroot, timestamp):
+    def verify_proofs(self, worldroot, stateroot):
         """
-        verify each of the named proofs. raises VerifyFailed if any fail
+        * If the worldroot is supplied, the presence of the contract storage account is verified
+        * If the stateroot is supplied, the contract storage root in the proof is verified
+
+        If no parameters are supplied this method simple verifies the storage
+        proofs are consistent with the storage roots in the proof itself.
+
+        :param worldroot: ethereum world state root from the block header
+        :param stateroot: contract storage root from eth_getStorageRoot
         """
 
         # pylint: disable="unused-argument"
 
         for name, proofelement in self._proofs.items():
             try:
+                if (
+                    stateroot is not None
+                    and proofelement["proof"]["storageHash"] != stateroot
+                ):
+                    raise ethproofs.VerifyFailed(
+                        f"expected stateroot mismatch, proof value {proofelement['proof']['storageHash']}"
+                    )
                 ethproofs.verify_eth_storage_proof(proofelement["proof"])
             except ethproofs.VerifyFailed:
                 # pylint: disable="raise-missing-from"
                 raise ethproofs.VerifyFailed(f"Failed to verify {name}")
+
+            if worldroot:
+                ethproofs.verify_eth_account_proof(
+                    self.contents["account"], proofelement["proof"], decode_hex(worldroot)
+                )
 
     def decode(self):
         """

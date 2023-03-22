@@ -141,13 +141,23 @@ class KhipuReceipt:
         """
         self.namedproofs = NamedProofs(contents, serviceparams=serviceparams)
 
-    def verify(self, stateroot=None, timestamp=None):
-        """Verify the named proofs"""
+    def verify(self, worldroot: str = None, stateroot: str = None):
+        """Verify the named proofs
+
+        * If the worldroot is supplied, the presence of the contract storage account is verified
+        * If the stateroot is supplied, the contract storage root in the proof is verified
+
+        If no parameters are supplied this method simple verifies the storage
+        proofs are consistent with the storage roots in the proof itself.
+
+        :param worldroot: ethereum world state root from the block header
+        :param stateroot: contract storage root from eth_getStorageRoot
+        """
         # TODO: pass in stateroot and timestamp so caller can provide it from block header
         self.namedproofs.check_payload_keys()
         self.namedproofs.check_application_parameters()
         self.namedproofs.collect_proofs(*MANIFEST_ELEMENTS)
-        self.namedproofs.verify_proofs(stateroot, timestamp)
+        self.namedproofs.verify_proofs(worldroot, stateroot)
 
     def decode(self):
         """decode the application values from the proof"""
