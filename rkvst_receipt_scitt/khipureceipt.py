@@ -102,27 +102,28 @@ def _u256touuid(b: bytes) -> str:
 class KhipuReceipt:
     """
     This class uses the EIP1186 *neutral* receipt format to encode a receipt for an RKVST 'khipu' event.
-    """
 
-    def __init__(self, contents, serviceparams=None):
-        """
-        serviceparams and contents are as per draft-birkholz-scitt-receipts 2. "Common parameters" & 3. "Generic Receipt Structure".
+    serviceparams and contents are as per draft-birkholz-scitt-receipts 2. "Common parameters" & 3. "Generic Receipt Structure".
 
-        But in essence the serviceparams identify the service and the appropriate interpretation of contents. Here,
-        our trie-alg is cEIP1186NamedProofs and the basic structure of the contents is:
+    But in essence the serviceparams identify the service and the appropriate interpretation of contents. Here,
+    our trie-alg is cEIP1186NamedProofs and the basic structure of the contents is:
+
+    .. code-block::
 
         {
           application_parameters: {
              app_id: trusted service application identifier,
              app_content_ref: trusted service application references,
-             element_manifest: [] the complete set of app-defined-names, 1:1 associative with named_proofs
+             element_manifest: [] the complete set of app-defined-names,
+                1:1 associative with named_proofs
           },
           block: hex-str block number the proof was read from
           account: the contract account the proof was read from
           named_proofs: [ list of named proofs, 1 per entry in element_manifest
              {
                 name: app-defined-name
-                id: proof-element-id - one of the three trie alg intrinsics defined in elementmetadata.py or app specific defined by app_content_ref
+                id: proof-element-id - one of the three trie alg intrinsics defined
+                    in elementmetadata.py or app specific defined by app_content_ref
 
                 ... one or more EIP 1186 merkle inclusion proofs and supporting
                 metadata
@@ -130,12 +131,15 @@ class KhipuReceipt:
           ]
         ]
 
-        For serviceparams to be fully compliant we need at least two items here:
-        * a permanent service identifier (likely app.rkvst.io)
-        * the trie alg defining the format of contents, currently EIP1186NamedProofs
+    For serviceparams to be fully compliant we need at least two items here:
+    * a permanent service identifier (likely app.rkvst.io)
+    * the trie alg defining the format of contents, currently EIP1186NamedProofs
 
-        But the implementation simply assumes this for now.
+    But the implementation simply assumes this for now.
+    """
 
+    def __init__(self, contents, serviceparams=None):
+        """
         :param contents: this is the trie-alg "EIP1186NamedProofs" defined receipt contents
         :param serviceparams: the service parameters required by draft-birkholz-scitt-receipts 2. "Common parameters"
         """
