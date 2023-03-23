@@ -13,9 +13,8 @@ from rlp.sedes import (
     Binary,
     big_endian_int,
 )
-from trie import (
-    HexaryTrie,
-)
+from trie import HexaryTrie
+from trie.exceptions import BadTrieProof
 
 from hexbytes import HexBytes
 
@@ -57,10 +56,11 @@ def verify_eth_account_proof(account: str, ethproof: dict, root: HexBytes):
 
     proof = [rlp.decode(bytes(HexBytes(node))) for node in ethproof["accountProof"]]
 
-    if rlp_account != HexaryTrie.get_from_proof(root, trie_key, proof):
-        raise VerifyFailed(
-            "Failed to verify account proof {}".format(ethproof["address"])
-        )
+    try:
+        if rlp_account != HexaryTrie.get_from_proof(root, trie_key, proof):
+            raise VerifyFailed(f"Failed to verify account proof for {account}")
+    except BadTrieProof as e:
+        raise VerifyFailed(f"Failed to verify account proof for {account}") from e
 
 
 def verify_eth_storage_proof(ethproof):
