@@ -48,16 +48,3 @@ jobs:
         # coverage html
         # coverage xml
         # coverage report
-
-    - name: Build and publish
-      env:
-        TWINE_USERNAME: ${{ secrets.PYPI_USERNAME }}
-        TWINE_PASSWORD: ${{ secrets.PYPI_PASSWORD }}
-      run: |
-        rm -rf *egg-info
-        rm -rf build
-        rm -rf dist/*
-        python3 -m build --sdist
-        python3 -m build --wheel
-        twine check dist/*
-        twine upload dist/*
