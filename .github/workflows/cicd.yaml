@@ -49,16 +49,15 @@ jobs:
         # coverage xml
         # coverage report
 
-    - name: Build distribution package
+    - name: Build and publish
+      env:
+        TWINE_USERNAME: ${{ secrets.PYPI_USERNAME }}
+        TWINE_PASSWORD: ${{ secrets.PYPI_PASSWORD }}
       run: |
         rm -rf *egg-info
         rm -rf build
         rm -rf dist/*
         python3 -m build --sdist
         python3 -m build --wheel
-
-    #- name: Publish package to PyPI
-    #  uses: pypa/gh-action-pypi-publish@v2
-    #  with:
-    #    username: __token__
-    #    password: ${{ secrets.PYPI_API_TOKEN }}
+        twine check dist/*
+        twine upload dist/*
