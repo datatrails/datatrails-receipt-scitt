@@ -51,9 +51,27 @@ templates_path = ["_templates"]
 # List of patterns, relative to source directory, that match files and
 # directories to ignore when looking for source files.
 # This pattern also affects html_static_path and html_extra_path.
-exclude_patterns = ["_build", "Thumbs.db", ".DS_Store", "unittests"]
+exclude_patterns = ["_site", "Thumbs.db", ".DS_Store", "unittests"]
 
 source_suffix = [".md", ".rst"]
+# -- markdown configuration
+
+myst_enable_extensions = [
+    "amsmath",
+    "attrs_inline",
+    "colon_fence",
+    "deflist",
+    "dollarmath",
+    "fieldlist",
+    "html_admonition",
+    "html_image",
+    # "linkify",
+    "replacements",
+    "smartquotes",
+    "strikethrough",
+    "substitution",
+    "tasklist",
+]
 
 # -- Options for HTML output -------------------------------------------------
 
@@ -63,6 +81,7 @@ source_suffix = [".md", ".rst"]
 
 # These paths are either relative to html_static_path
 # or fully qualified paths (eg. https://...)
+# Note this assumes that the contents of docs/rkvst-css/* are copied to _site/css/*
 html_css_files = [
     "css/rkvst_theme.css",
 ]

@@ -5,12 +5,15 @@
 
 .. include:: ../README.rst
 
+
 .. toctree::
    :hidden:
    :maxdepth: 5
-   :caption: Contents:
+   :caption: Scitt Receipt Verification
 
-   package
+   api
+
+Keep an eye on `RKVST Docs <https://docs.rkvst.com/docs/overview/introduction/>`_ For guides and howto's
 
 Indices and tables
 ==================

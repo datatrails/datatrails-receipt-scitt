@@ -4,7 +4,7 @@
 RKVST Scitt Receipt Verification in python
 ==========================================
 
-Prescribed python code that defines the verification of scitt receipts for rkvst events.
+Python support for the offline verification of scitt receipts for rkvst events.
 
 
 **Notice**: This work is based on the *draft* standard draft-birkholz-scitt-receipts-02_ . This work and the upstream standard will evolve. We make no current promise of api stability

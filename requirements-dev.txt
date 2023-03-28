@@ -15,6 +15,7 @@ myst-parser~=1.0.0
 sphinx-rtd-theme~=1.2.0
 sphinx-gallery~=0.12.1
 sphinxcontrib-spelling~=8.0.0
+sphinx-mdinclude~=0.5.3
 
 # uploading to pypi
 build~=0.8

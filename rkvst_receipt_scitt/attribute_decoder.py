@@ -29,15 +29,16 @@ def decode_attribute_value(attrvalue: bytes) -> str | list | dict:
     """
     decode an rlp encoded attribute value
 
-    :param hex str: an rlp encoded hexadecimal string,
+    :param str hex: an rlp encoded hexadecimal string,
                     e.g. 0xe5866c6973747632cecd87676972...
 
-    :returns: either:
-      * a string value
-      * a dictionary value
-      * a list of dictionary values
+    :returns: one of:
 
-    the rlp encoded list value is of the shape:
+        * a string value
+        * a dictionary value
+        * a list of dictionary values
+
+    the rlp encoded list value is of the shape::
 
       [][][]string {
         [
@@ -61,7 +62,7 @@ def decode_attribute_value(attrvalue: bytes) -> str | list | dict:
         ]
       }
 
-    the rlp encoded dict value is of the shape:
+    the rlp encoded dict value is of the shape::
 
       [][]string {
         [
@@ -132,11 +133,19 @@ def decode_attribute_value(attrvalue: bytes) -> str | list | dict:
 
 
 def decode_attribute_key(kind_name: bytes) -> tuple[AttributeType, str]:
-    """Decodes the attribute kind<->name pairing into the attribute kind and key
+    """Decodes the attribute kind<->name pairing into the attribute kind and keys
 
-    :param kind_name: str the rlp encoded attribute kind concatenated with the attribute key encoded as a hex string, e.g. 0x8767697261666665...
+    :param str kind_name: the rlp encoded attribute kind concatenated with the attribute key encoded as a hex string, e.g. 0x8767697261666665...
+
+
     :return: a tuple of (attribute type, attribute key)
+
     """
+
+    # """
+    # :param kind_name: str the rlp encoded attribute kind concatenated with the attribute key encoded as a hex string, e.g. 0x8767697261666665...
+    # :return: a tuple of (attribute type, attribute key)
+    # """
     kind_name_sedes = List([binary, binary])
 
     decoded_kind_name = decode(kind_name, kind_name_sedes)
