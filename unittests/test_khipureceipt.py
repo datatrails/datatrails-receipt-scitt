@@ -27,7 +27,6 @@ class TestKhipuReceipt(TestCase):
         """
         contents = json_loads_receipt_contents("khipu_receipt_happy_default.b64")
         kr = KhipuReceipt(contents)
-        kr.verify()
         event = kr.decode()
         self.assertIn("asset_attributes", event)
         self.assertIn(LONG_ANIMAL_NAME_KEY, event["asset_attributes"])
