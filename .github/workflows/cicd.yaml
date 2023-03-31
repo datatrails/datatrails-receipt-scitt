@@ -45,14 +45,13 @@ jobs:
 
         python3 -m unittest
 
-        # coverage fails if there are no unit tests
-        # rm -f coverage.xml
-        # rm -rf htmlcov
-        # coverage --version
-        # coverage run --branch --source rkvst_receipt_scitt -m unittest -v
-        # coverage html
-        # coverage xml
-        # coverage report
+        rm -f coverage.xml
+        rm -rf htmlcov
+        coverage --version
+        coverage run --branch --source rkvst_receipt_scitt -m unittest -v
+        coverage html --fail-under=85
+        coverage xml --fail-under=85
+        coverage report --fail-under=85
 
     - name: Setup Pages
       uses: actions/configure-pages@v3
