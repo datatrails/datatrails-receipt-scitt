@@ -145,26 +145,29 @@ class KhipuReceipt:
         """
         self.namedproofs = NamedProofs(contents, serviceparams=serviceparams)
 
-    def verify(self, worldroot: str = None, stateroot: str = None):
+    def verify(self, worldroot: str = None):
         """Verify the named proofs
 
         * If the worldroot is supplied, the presence of the contract storage account is verified
-        * If the stateroot is supplied, the contract storage root in the proof is verified
 
         If no parameters are supplied this method simple verifies the storage
         proofs are consistent with the storage roots in the proof itself.
 
         :param worldroot: ethereum world state root from the block header
-        :param stateroot: contract storage root from eth_getStorageRoot
         """
         # TODO: pass in stateroot and timestamp so caller can provide it from block header
         self.namedproofs.check_payload_keys()
         self.namedproofs.check_application_parameters()
         self.namedproofs.collect_proofs(*MANIFEST_ELEMENTS)
-        self.namedproofs.verify_proofs(worldroot, stateroot)
+        self.namedproofs.verify_proofs(worldroot)
 
     def decode(self):
         """decode the application values from the proof"""
+
+        # ensure we have the proofs from the contents collected
+        if not self.namedproofs.proofs:
+            self.namedproofs.collect_proofs(*MANIFEST_ELEMENTS)
+
         self.namedproofs.decode()
 
         # Now use RKVST API assumptions to rebuild the event and asset attributes map

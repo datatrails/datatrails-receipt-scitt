@@ -13,7 +13,7 @@ def receipt_verify(opts):
     b64 = opts.receipt.read()
     contents = json.loads(receipt_trie_alg_contents(b64)[1])
     r = KhipuReceipt(contents)
-    r.verify(opts.worldroot, opts.stateroot)
+    r.verify(opts.worldroot)
     if opts.decode:
         event = r.decode()
         print(json.dumps(event, sort_keys=True, indent="  "))
@@ -41,15 +41,6 @@ def main(args=None):  # pragma: no cover
 The storageroot for the etherum world state, required to verify the contract
 account exists.  This value is obtained from archivist/v1/archivist/block. If
 not supplied the account existence is not verified.
-""",
-    )
-    s.add_argument(
-        "-s",
-        "--stateroot",
-        help="""
-expected storage stateRoot for the contract address. if supplied verification
-confirms the storageProofs are all rooted with this value. otherwise
-verification simply shows the receipt is self consistent
 """,
     )
     s.add_argument(

@@ -97,29 +97,20 @@ class NamedProofs:
         if required:
             raise NamedProofsMissingProof(f"{', '.join(list(required))}")
 
-    def verify_proofs(self, worldroot, stateroot):
+    def verify_proofs(self, worldroot):
         """
         * If the worldroot is supplied, the presence of the contract storage account is verified
-        * If the stateroot is supplied, the contract storage root in the proof is verified
 
         If no parameters are supplied this method simple verifies the storage
         proofs are consistent with the storage roots in the proof itself.
 
         :param worldroot: ethereum world state root from the block header
-        :param stateroot: contract storage root from eth_getStorageRoot
         """
 
         # pylint: disable="unused-argument"
 
         for name, proofelement in self._proofs.items():
             try:
-                if (
-                    stateroot is not None
-                    and proofelement["proof"]["storageHash"] != stateroot
-                ):
-                    raise ethproofs.VerifyFailed(
-                        f"expected stateroot mismatch, proof value {proofelement['proof']['storageHash']}"
-                    )
                 ethproofs.verify_eth_storage_proof(proofelement["proof"])
             except ethproofs.VerifyFailed:
                 # pylint: disable="raise-missing-from"
