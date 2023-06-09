@@ -61,7 +61,7 @@ def u256touuidhi(b: bytes) -> str:
 
 class Receipt:
     """
-    This class uses the EIP1186 *neutral* receipt format to encode a receipt for an RKVST events.
+    This class uses the EIP1186 *neutral* receipt format to encode a receipt for an RKVST event.
 
     serviceparams and contents are as per draft-birkholz-scitt-receipts 2. "Common parameters" & 3. "Generic Receipt Structure".
 

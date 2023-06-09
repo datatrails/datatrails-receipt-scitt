@@ -64,13 +64,13 @@ def main(args=None):  # pragma: no cover
         "-w",
         "--worldroot",
         help="""
-The storageroot for the etherum world state, required to verify the contract
+The storageroot for the ethereum world state, required to verify the contract
 account exists.  This value is obtained from archivist/v1/archivist/block. If
 not supplied the account existence is not verified.
 """,
     )
     s.add_argument(
-        "--fqdn", help="The fully qualified domanin name of the rkvst deployment",
+        "--fqdn", help="The fully qualified domain name of the rkvst deployment",
         default="app.rkvst.io"
     )
     s.add_argument(
