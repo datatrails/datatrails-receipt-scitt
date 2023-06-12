@@ -26,9 +26,9 @@ def receipt_verify(opts):
 
 
 def load_receipt_contents(contents: dict):
-    """inspect the json decoded contents of a receipt and instantiate the appropriate verifier. """
+    """inspect the json decoded contents of a receipt and instantiate the appropriate verifier."""
 
-    if SIMPLE_HASH_ELEMENT in contents['application_parameters']['element_manifest']:
+    if SIMPLE_HASH_ELEMENT in contents["application_parameters"]["element_manifest"]:
         return SimpleHashReceipt(contents)
 
     return KhipuReceipt(contents)
@@ -70,8 +70,9 @@ not supplied the account existence is not verified.
 """,
     )
     s.add_argument(
-        "--fqdn", help="The fully qualified domain name of the rkvst deployment",
-        default="app.rkvst.io"
+        "--fqdn",
+        help="The fully qualified domain name of the rkvst deployment",
+        default="app.rkvst.io",
     )
     s.add_argument(
         "receipt",

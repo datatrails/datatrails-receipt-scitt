@@ -21,13 +21,18 @@ class TestSimpleHashReceipt(TestCase):
         contents = json_loads_receipt_contents("simplehash_receipt_happy_default.b64")
         sr = SimpleHashReceipt(contents)
         anchor = sr.decode()
-        self.assertEqual(anchor["tenant"], "tenant/c8c51acf-5084-48ba-9e76-2c3cd9439818")
-        self.assertEqual(anchor["anchor"], "f29b54ec5f183ba17a434809bef8a06e457aa63cd99deab3bcb54715901f0910")
+        self.assertEqual(
+            anchor["tenant"], "tenant/c8c51acf-5084-48ba-9e76-2c3cd9439818"
+        )
+        self.assertEqual(
+            anchor["anchor"],
+            "f29b54ec5f183ba17a434809bef8a06e457aa63cd99deab3bcb54715901f0910",
+        )
         self.assertEqual(anchor["hashSchemaVersion"], 2)
         self.assertEqual(anchor["eventCount"], 1)
         self.assertEqual(anchor["proofMechanism"], 2)
-        self.assertEqual(anchor["startTimeRFC3339"], '2023-06-01T13:33:00Z')
-        self.assertEqual(anchor["endTimeRFC3339"], '2023-06-08T11:18:02Z')
+        self.assertEqual(anchor["startTimeRFC3339"], "2023-06-01T13:33:00Z")
+        self.assertEqual(anchor["endTimeRFC3339"], "2023-06-08T11:18:02Z")
         self.assertEqual(anchor["startTimeUnix"], 1685626380)
         self.assertEqual(anchor["endTimeUnix"], 1686223082)
         print(json.dumps(anchor, sort_keys=True, indent="  "))
