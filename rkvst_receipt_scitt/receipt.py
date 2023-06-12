@@ -106,7 +106,7 @@ class Receipt:
         """
         self.namedproofs = NamedProofs(contents, serviceparams=serviceparams)
 
-    def verify(self, elements, worldroot=None):
+    def verify(self, elements, worldroot: str = None):
         """Verify the named proofs
 
         * If the worldroot is supplied, the presence of the contract storage account is verified
