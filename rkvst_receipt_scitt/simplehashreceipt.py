@@ -3,9 +3,10 @@
 RKVST SimpleHash event receipt specifics
 """
 
-MANIFEST_ELEMENTS=["simplehash"]
-
 from .receipt import utf8bytes32decode, u256touuidhi, Receipt
+
+
+MANIFEST_ELEMENTS=["simplehash"]
 
 
 class SimpleHashReceipt(Receipt):

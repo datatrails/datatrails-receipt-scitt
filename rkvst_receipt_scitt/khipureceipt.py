@@ -10,14 +10,13 @@ from .attribute_decoder import (
     AttributeType,
 )
 
+from .receipt import bto3339, u256touuid, Receipt
+
 
 class KhipuReceiptMalformedAttributes(ValueError):
     """
     The receipt encoding of the rkvst attributes is malformed
     """
-
-
-from .receipt import bto3339, u256touuid, Receipt
 
 
 EXTRA_PARAMETERS = ["monotonic_version"]

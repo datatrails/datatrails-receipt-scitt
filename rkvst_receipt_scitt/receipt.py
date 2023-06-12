@@ -4,7 +4,6 @@ RKVST Receipt support common for both khipu and simplehash specifics
 import uuid
 from datetime import datetime
 import rfc3339
-from eth_utils import to_checksum_address
 
 from .namedproofs import NamedProofs
 
@@ -15,7 +14,7 @@ class ReceiptMalformedValue(ValueError):
     """
 
 
-def utf8bytes32decode(b: bytes, scale=1):
+def utf8bytes32decode(b: bytes):
     """When a string, often an RFC 3339 timestamp, is packed into a bytes32 storage slot use this."""
 
     # This seems to be the most robust thing we can do here
@@ -107,7 +106,7 @@ class Receipt:
         """
         self.namedproofs = NamedProofs(contents, serviceparams=serviceparams)
 
-    def verify(self, elements, worldroot):
+    def verify(self, elements, worldroot=None):
         """Verify the named proofs
 
         * If the worldroot is supplied, the presence of the contract storage account is verified
