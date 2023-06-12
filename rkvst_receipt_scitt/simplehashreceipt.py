@@ -46,4 +46,3 @@ class SimpleHashReceipt(Receipt):
             endOperator=utf8bytes32decode(fields.value('endOperator'))
         )
         return anchor
-
