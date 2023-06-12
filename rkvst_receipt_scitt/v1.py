@@ -30,7 +30,7 @@ def load_receipt_contents(contents: dict):
 
     if (SIMPLE_HASH_ELEMENT in contents['application_parameters']['element_manifest']):
         return SimpleHashReceipt(contents)
-        
+
     return KhipuReceipt(contents)
 
 

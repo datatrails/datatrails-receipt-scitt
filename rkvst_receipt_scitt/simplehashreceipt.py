@@ -7,6 +7,7 @@ MANIFEST_ELEMENTS=["simplehash"]
 
 from .receipt import utf8bytes32decode, u256touuidhi, Receipt
 
+
 class SimpleHashReceipt(Receipt):
     """
     This class adds SimpleHash receipt specifics
@@ -32,7 +33,7 @@ class SimpleHashReceipt(Receipt):
         fields = self.namedproofs.decoded("simplehash")
 
         anchor = dict(
-            tenant = f"tenant/{u256touuidhi(fields.value('tenant'))}",
+            tenant=f"tenant/{u256touuidhi(fields.value('tenant'))}",
             anchor=fields.value("anchor").hex(),
             hashSchemaVersion=int.from_bytes(fields.value("hashSchemaVersion"), "big"),
             eventCount=int.from_bytes(fields.value('eventCount'), "big"),
@@ -45,3 +46,4 @@ class SimpleHashReceipt(Receipt):
             endOperator=utf8bytes32decode(fields.value('endOperator'))
         )
         return anchor
+

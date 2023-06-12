@@ -14,12 +14,14 @@ class ReceiptMalformedValue(ValueError):
     The receipt encoding of a storage value is not as expected
     """
 
+
 def utf8bytes32decode(b: bytes, scale=1):
     """When a string, often an RFC 3339 timestamp, is packed into a bytes32 storage slot use this."""
 
     # This seems to be the most robust thing we can do here
     end = b.index(0x00)
     return b[:end].decode("utf-8")
+
 
 def bto3339(b: bytes, scale=1):
     """
@@ -44,6 +46,7 @@ def u256touuid(b: bytes) -> str:
 
     return uuid.UUID(int=int.from_bytes(b, "big"))
 
+
 def u256touuidhi(b: bytes) -> str:
     """
     convert a 32 byte value from khipu event storage to a uuid
@@ -56,7 +59,6 @@ def u256touuidhi(b: bytes) -> str:
     b = b[:16]  # the low bytes are zero
 
     return uuid.UUID(int=int.from_bytes(b, "big"))
-
 
 
 class Receipt:

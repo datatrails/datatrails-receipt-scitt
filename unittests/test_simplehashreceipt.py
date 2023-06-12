@@ -42,3 +42,4 @@ class TestSimpleHashReceipt(TestCase):
         # Note: remember this is the public .stateRoot for simple hash (rather
         # than .privateStateRoot as it is for khipu)
         sr.verify("0x35ac20316361c00015ee4e8ebd0a023afa3b99ee5d47b82f201cfa5086c82034")
+

@@ -16,7 +16,9 @@ class KhipuReceiptMalformedAttributes(ValueError):
     The receipt encoding of the rkvst attributes is malformed
     """
 
+
 from .receipt import bto3339, u256touuid, Receipt
+
 
 EXTRA_PARAMETERS = ["monotonic_version"]
 APPLICATION_PARAMETERS = trie_alg.APPLICATION_PARAMETERS + EXTRA_PARAMETERS
@@ -64,6 +66,7 @@ def _whens_from_rawstorage(rawstorage):
         # and we need seconds to do the RFC 3339 conversion
         "timestamp_committed": bto3339(rawstorage[WHEN_COMMITTED], scale=1000000000),
     }
+
 
 class KhipuReceipt(Receipt):
     """
