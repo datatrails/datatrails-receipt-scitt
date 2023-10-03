@@ -23,9 +23,10 @@ from typing import Tuple
 import base64
 import cbor2.decoder
 from pycose.messages.sign1message import Sign1Message
+from pycose.messages import CoseMessage
 
 
-def receipt_trie_alg_contents(receiptb64: str) -> Tuple[Sign1Message, bytes]:
+def receipt_trie_alg_contents(receiptb64: str) -> CoseMessage:
     """decode the protected header, the signature and the tree-alg contents from the receipt.
 
     The semantics of the contents are defined by the EIP1186NamedSlotProofs tree
@@ -34,11 +35,11 @@ def receipt_trie_alg_contents(receiptb64: str) -> Tuple[Sign1Message, bytes]:
     :param str receipt: base64 encoded CBOR Cose Sign1 receipt value obtained from the receipts api
 
     """
-    receiptbytes = base64.standard_b64decode(receiptb64)
+    cbor_msg = base64.standard_b64decode(receiptb64)
 
-    [sign_protected, [signature, contents]] = cbor2.decoder.loads(receiptbytes)
+    decoded_msg = Sign1Message.decode(cbor_msg)
 
-    return sign_protected, contents, signature
+    return decoded_msg
 
 
 def receipt_verify_envelope(

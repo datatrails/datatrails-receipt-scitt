@@ -14,7 +14,9 @@ def receipt_verify(opts):
     sub command implementation for verifying, and optionally decoding, a receipt
     """
     b64 = opts.receipt.read()
-    contents = json.loads(receipt_trie_alg_contents(b64)[1])
+    msg = receipt_trie_alg_contents(b64)
+    payload = msg.payload
+    contents = json.loads(payload)
     r = load_receipt_contents(contents)
     r.verify(opts.worldroot)
     if opts.decode:
