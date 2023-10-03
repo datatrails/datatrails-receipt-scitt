@@ -19,7 +19,6 @@ The protected field is dictated by the standard. The contents field is define by
 
 # [receipts-02]:
 # TODO: check format of docstrings is compatible with sphynx. need ci support adding to check this
-from typing import Tuple
 import base64
 import cbor2.decoder
 from pycose.messages.sign1message import Sign1Message
