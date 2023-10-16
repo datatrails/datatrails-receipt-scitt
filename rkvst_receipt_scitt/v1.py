@@ -17,7 +17,6 @@ def receipt_verify(opts):
     contents = receipt_trie_alg_contents(b64)
     r = load_receipt_contents(contents)
     r.verify(opts.worldroot)
-    print("Verified: True")
     if opts.decode:
         decoded = r.decode()
         if isinstance(r, SimpleHashReceipt):
