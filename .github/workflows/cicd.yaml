@@ -13,7 +13,8 @@ jobs:
 
     strategy:
       matrix:
-        python-version: ['3.7', '3.8', '3.9', '3.10', '3.11']
+        python-version: ['3.8', '3.9', '3.10', '3.11', '3.12']
+        os: [ubuntu-latest, windows-latest]
 
     steps:
     - uses: actions/checkout@v2
@@ -43,6 +44,7 @@ jobs:
     - name: Run tests
       run: |
 
+        python3 -m pip freeze # required to report issue to py-trie
         python3 -m unittest
 
         rm -f coverage.xml

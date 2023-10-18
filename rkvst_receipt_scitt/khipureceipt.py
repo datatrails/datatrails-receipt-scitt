@@ -107,7 +107,6 @@ class KhipuReceipt(Receipt):
         eventattributes = {}
 
         for kindname, rlpvalue in zip(kindnames, values):
-
             kind, name = decode_attribute_key(kindname)
 
             value = decode_attribute_value(rlpvalue)

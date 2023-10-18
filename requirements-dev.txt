@@ -1,12 +1,12 @@
 -r requirements.txt
 
 # code quality
-autopep8~=1.6
-black~=22.10
-coverage[toml]~=6.5
-pip-audit~=2.4
-pycodestyle~=2.9
-pylint~=2.14
+autopep8~=2.0
+black~=23.9
+coverage[toml]~=7.3
+pip-audit~=2.6
+pycodestyle~=2.10
+pylint~=3.0
 xq~=0.0
 
 # docs
@@ -18,5 +18,5 @@ sphinxcontrib-spelling~=8.0.0
 sphinx-mdinclude~=0.5.3
 
 # uploading to pypi
-build~=0.8
+build~=1.0
 twine~=4.0
