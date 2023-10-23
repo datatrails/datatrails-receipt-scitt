@@ -21,9 +21,18 @@ The protected field is dictated by the standard. The contents field is define by
 # TODO: check format of docstrings is compatible with sphynx. need ci support adding to check this
 import base64
 import json
+import re
+import requests
 from typing import Any
 import cbor2.decoder
 from pycose.messages.sign1message import Sign1Message
+from pycose.headers import KID
+from jwcrypto import jwk
+from pycose.algorithms import Es256
+from pycose.keys.curves import P256, P384
+from pycose.keys.keyparam import KpKty, EC2KpX, EC2KpY, KpKeyOps, EC2KpCurve
+from pycose.keys.keytype import KtyEC2
+from pycose.keys.keyops import VerifyOp
 
 
 def receipt_trie_alg_contents(receiptb64: str) -> Any:
@@ -40,7 +49,6 @@ def receipt_trie_alg_contents(receiptb64: str) -> Any:
     # first attempt to decode into pycose cose sign1
     try:
         decoded_msg = Sign1Message.decode(cbor_msg)
-
         payload = decoded_msg.payload
 
     except AttributeError:
@@ -53,6 +61,69 @@ def receipt_trie_alg_contents(receiptb64: str) -> Any:
 
     contents = json.loads(payload)
     return contents
+
+def verify_signature(receiptb64: str) -> Any: 
+    cbor_msg = base64.standard_b64decode(receiptb64)
+    # try:
+    decoded_msg = Sign1Message.decode(cbor_msg)
+    protected_header = decoded_msg.phdr
+    kid = protected_header[KID]
+    did = protected_header[391]
+
+    pattern = r"did:web:(?P<host>[a-zA-Z0-9/.\-_]+)(?:%3A(?P<port>[0-9]+))?(:*)(?P<path>[a-zA-Z0-9/.:\-_]*)"
+    match = re.match(pattern, did)
+
+    if not match:
+        raise ValueError("DID is not a valid did:web")
+
+    groups = match.groupdict()
+    host = groups["host"]
+    port = groups.get("port")  # might be None
+    path = groups["path"]
+
+    origin = f"{host}:{port}" if port else host
+
+    protocol = "https"
+
+    decoded_partial_path = path.replace(":", "/")
+
+    endpoint = (
+        f"{protocol}://{origin}/{decoded_partial_path}/did.json"
+        if path
+        else f"{protocol}://{origin}/.well-known/did.json"
+    )
+
+    resp = requests.get(endpoint)
+    if resp.status_code != 200:
+        raise Exception()  # TODO: Specify.
+
+    did_document = resp.json()
+
+    x = ""
+    y = ""
+    for verification_method in did_document["verificationMethod"]:
+        if verification_method["publicKeyJwk"]["kid"] != kid.decode("utf-8"):
+            continue
+
+        x = verification_method["publicKeyJwk"]["x"]
+        y = verification_method["publicKeyJwk"]["y"]
+        break
+
+    if not (x or y):
+        raise Exception()  # TODO: Specify.
+
+    cose_key = {
+        KpKty: KtyEC2,
+        EC2KpCurve: P384,
+        KpKeyOps: [VerifyOp],
+        EC2KpX: jwk.base64url_decode(x),
+        EC2KpY: jwk.base64url_decode(y),
+    }
+
+    cose_key = CoseKey.from_dict(cose_key)
+
+    decoded_msg.key = cose_key
+    return decoded_msg.verify_signature()
 
 
 def receipt_verify_envelope(

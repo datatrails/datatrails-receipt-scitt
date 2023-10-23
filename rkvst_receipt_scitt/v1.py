@@ -2,7 +2,7 @@
 import sys
 import argparse
 import json
-from rkvst_receipt_scitt.receiptdecoder import receipt_trie_alg_contents
+from rkvst_receipt_scitt.receiptdecoder import receipt_trie_alg_contents, verify_signature
 from rkvst_receipt_scitt.khipureceipt import KhipuReceipt
 from rkvst_receipt_scitt.simplehashreceipt import SimpleHashReceipt
 
@@ -14,6 +14,10 @@ def receipt_verify(opts):
     sub command implementation for verifying, and optionally decoding, a receipt
     """
     b64 = opts.receipt.read()
+
+    if opts.verify:
+        verify_signature(b64)
+
     contents = receipt_trie_alg_contents(b64)
     r = load_receipt_contents(contents)
     r.verify(opts.worldroot)
@@ -79,6 +83,12 @@ not supplied the account existence is not verified.
         nargs="?",
         type=argparse.FileType("r"),
         default=(None if sys.stdin.isatty() else sys.stdin),
+    )
+    s.add_argument(
+        "-v",
+        "--verify",
+        action="store_true",
+        help="Verify the message signature before proceeding",
     )
     s.set_defaults(func=receipt_verify)
 
