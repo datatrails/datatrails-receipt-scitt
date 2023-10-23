@@ -14,13 +14,14 @@ def receipt_verify(opts):
     sub command implementation for verifying, and optionally decoding, a receipt
     """
     b64 = opts.receipt.read()
-    contents = receipt_trie_alg_contents(b64)
+    contents, public = receipt_trie_alg_contents(b64)
     r = load_receipt_contents(contents)
+
     r.verify(opts.worldroot)
     if opts.decode:
         decoded = r.decode()
         if isinstance(r, SimpleHashReceipt):
-            decoded["api_query"] = api_query(decoded, opts.fqdn)
+            decoded["api_query"] = api_query(decoded, opts.fqdn, public)
 
         print(json.dumps(decoded, sort_keys=True, indent="  "))
 
@@ -34,11 +35,13 @@ def load_receipt_contents(contents: dict):
     return KhipuReceipt(contents)
 
 
-def api_query(decoded: dict, fqdn: str):
+def api_query(decoded: dict, fqdn: str, public: bool = False):
     """recover the simple hash api query from the anchor receipt decoded values"""
 
+    assets_resource = "publicassets" if public else "assets"
+
     # Note: this MUST align with rkvst-simplehash-python's approach
-    path = f"https://{fqdn}/archivist/v2/assets/-/events"
+    path = f"https://{fqdn}/archivist/v2/{assets_resource}/-/events"
     path += "?order_by=SIMPLEHASHV2&proof_mechanism=SIMPLE_HASH"
     path += f"&timestamp_accepted_since={decoded['startTimeRFC3339']}"
     path += f"&timestamp_accepted_before={decoded['endTimeRFC3339']}"
