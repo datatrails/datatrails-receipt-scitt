@@ -43,6 +43,10 @@ def receipt_trie_alg_contents(receiptb64: str) -> Tuple[Any, bool]:
         decoded_msg = Sign1Message.decode(cbor_msg)
 
         payload = decoded_msg.payload
+
+        # NOTE: this is a stop gap while we only have public scitt receipts
+        #       when we support permissioned scitt receipts as well, we need to
+        #       find a different solution.
         public = True
 
     except AttributeError:
