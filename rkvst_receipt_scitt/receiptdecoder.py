@@ -19,13 +19,14 @@ The protected field is dictated by the standard. The contents field is define by
 
 # [receipts-02]:
 # TODO: check format of docstrings is compatible with sphynx. need ci support adding to check this
-from typing import Tuple
 import base64
+import json
+from typing import Any
 import cbor2.decoder
 from pycose.messages.sign1message import Sign1Message
 
 
-def receipt_trie_alg_contents(receiptb64: str) -> Tuple[Sign1Message, bytes]:
+def receipt_trie_alg_contents(receiptb64: str) -> Any:
     """decode the protected header, the signature and the tree-alg contents from the receipt.
 
     The semantics of the contents are defined by the EIP1186NamedSlotProofs tree
@@ -34,11 +35,24 @@ def receipt_trie_alg_contents(receiptb64: str) -> Tuple[Sign1Message, bytes]:
     :param str receipt: base64 encoded CBOR Cose Sign1 receipt value obtained from the receipts api
 
     """
-    receiptbytes = base64.standard_b64decode(receiptb64)
+    cbor_msg = base64.standard_b64decode(receiptb64)
 
-    [sign_protected, [signature, contents]] = cbor2.decoder.loads(receiptbytes)
+    # first attempt to decode into pycose cose sign1
+    try:
+        decoded_msg = Sign1Message.decode(cbor_msg)
 
-    return sign_protected, contents, signature
+        payload = decoded_msg.payload
+
+    except AttributeError:
+        # if we can't decode the message into the pycose cose sign1,
+        #   attempt to decode it into our notary representation
+        decoded_msg = cbor2.decoder.loads(cbor_msg)
+
+        # the notary receipt is in the form: [sign_protected, [signature, payload]]
+        payload = decoded_msg[1][1]
+
+    contents = json.loads(payload)
+    return contents
 
 
 def receipt_verify_envelope(

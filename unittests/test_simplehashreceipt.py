@@ -37,6 +37,37 @@ class TestSimpleHashReceipt(TestCase):
         self.assertEqual(anchor["endTimeUnix"], 1686223082)
         print(json.dumps(anchor, sort_keys=True, indent="  "))
 
+    def test_decode_receipt_cose_sign1(self):
+        """
+        test that we can verify and decode the receipt in the cose_sign1 format
+        """
+        contents = json_loads_receipt_contents(
+            "simplehash_receipt_happy_cose_sign1.b64"
+        )
+        sr = SimpleHashReceipt(contents)
+        anchor = sr.decode()
+        self.assertEqual(
+            anchor["tenant"], "tenant/e3234a54-cd99-9769-3efe-faccff52f0de"
+        )
+        self.assertEqual(
+            anchor["anchor"],
+            "e511713031f00b7c1d60ab65a01451284c32f7108e2aec7f707a889c777e7731",
+        )
+        self.assertEqual(anchor["hashSchemaVersion"], 2)
+        self.assertEqual(anchor["eventCount"], 8)
+        self.assertEqual(anchor["proofMechanism"], 2)
+        self.assertEqual(anchor["startTimeRFC3339"], "2023-10-12T13:10:43Z")
+        self.assertEqual(anchor["endTimeRFC3339"], "2023-10-16T11:55:54Z")
+        self.assertEqual(
+            anchor["startTimeUnix"],
+            1697116243,
+        )
+        self.assertEqual(
+            anchor["endTimeUnix"],
+            1697457354,
+        )
+        print(json.dumps(anchor, sort_keys=True, indent="  "))
+
     def test_verify_receipt(self):
         """
         test that we can verify the receipt. this is really just a regression
