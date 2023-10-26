@@ -15,5 +15,5 @@ def json_loads_receipt_contents(datafilename) -> dict:
     :param datafilename: base name of a file packaged in the data sub package
     """
     b64 = read_text("unittests.data", datafilename)
-    contents = receipt_trie_alg_contents(b64)
+    contents, _ = receipt_trie_alg_contents(b64)
     return contents

@@ -21,12 +21,12 @@ The protected field is dictated by the standard. The contents field is define by
 # TODO: check format of docstrings is compatible with sphynx. need ci support adding to check this
 import base64
 import json
-from typing import Any, Tuple
+from typing import Tuple
 import cbor2.decoder
 from pycose.messages.sign1message import Sign1Message
 
 
-def receipt_trie_alg_contents(receiptb64: str) -> Tuple[Any, bool]:
+def receipt_trie_alg_contents(receiptb64: str) -> Tuple[dict, bool]:
     """decode the protected header, the signature and the tree-alg contents from the receipt.
 
     The semantics of the contents are defined by the EIP1186NamedSlotProofs tree
