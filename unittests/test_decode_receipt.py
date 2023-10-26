@@ -24,7 +24,7 @@ class TestReceiptDecoder(TestCase):
         Test we can get at the payload and that it is valid json
         """
         b64 = read_text("unittests.data", "khipu_receipt_happy_default.b64")
-        contents = receipt_trie_alg_contents(b64)
+        contents, _ = receipt_trie_alg_contents(b64)
         for k in trie_alg.PAYLOAD_KEYS:
             self.assertIn(k, contents)
         for k in khipureceipt.APPLICATION_PARAMETERS:
@@ -37,7 +37,7 @@ class TestReceiptDecoder(TestCase):
         Test we can get at the payload and that it is valid json from a cose sign1 structure
         """
         b64 = read_text("unittests.data", "simplehash_receipt_happy_cose_sign1.b64")
-        contents = receipt_trie_alg_contents(b64)
+        contents, _ = receipt_trie_alg_contents(b64)
         for k in trie_alg.PAYLOAD_KEYS:
             self.assertIn(k, contents)
         for k in simplehashreceipt.MANIFEST_ELEMENTS:
@@ -52,7 +52,7 @@ class TestReceiptDecoder(TestCase):
         # XXX:TODO we should make a different funtion that returns all that
         # is needed to verify a signature, as receipt_trie_alg_contents
         # now returns just the payload
-        contents = receipt_trie_alg_contents(b64)
+        contents, _ = receipt_trie_alg_contents(b64)
         k = key()
 
         # XXX:TODO We are missing the header.Algorithm that pycose needs in
