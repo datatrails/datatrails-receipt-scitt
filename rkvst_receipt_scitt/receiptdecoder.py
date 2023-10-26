@@ -21,12 +21,12 @@ The protected field is dictated by the standard. The contents field is define by
 # TODO: check format of docstrings is compatible with sphynx. need ci support adding to check this
 import base64
 import json
-from typing import Any
+from typing import Tuple
 import cbor2.decoder
 from pycose.messages.sign1message import Sign1Message
 
 
-def receipt_trie_alg_contents(receiptb64: str) -> Any:
+def receipt_trie_alg_contents(receiptb64: str) -> Tuple[dict, bool]:
     """decode the protected header, the signature and the tree-alg contents from the receipt.
 
     The semantics of the contents are defined by the EIP1186NamedSlotProofs tree
@@ -34,6 +34,7 @@ def receipt_trie_alg_contents(receiptb64: str) -> Any:
 
     :param str receipt: base64 encoded CBOR Cose Sign1 receipt value obtained from the receipts api
 
+    :return: a tuple of proof and whether the proof is public or permissioned
     """
     cbor_msg = base64.standard_b64decode(receiptb64)
 
@@ -43,6 +44,11 @@ def receipt_trie_alg_contents(receiptb64: str) -> Any:
 
         payload = decoded_msg.payload
 
+        # NOTE: this is a stop gap while we only have public scitt receipts
+        #       when we support permissioned scitt receipts as well, we need to
+        #       find a different solution.
+        public = True
+
     except AttributeError:
         # if we can't decode the message into the pycose cose sign1,
         #   attempt to decode it into our notary representation
@@ -50,9 +56,10 @@ def receipt_trie_alg_contents(receiptb64: str) -> Any:
 
         # the notary receipt is in the form: [sign_protected, [signature, payload]]
         payload = decoded_msg[1][1]
+        public = False
 
     contents = json.loads(payload)
-    return contents
+    return contents, public
 
 
 def receipt_verify_envelope(
