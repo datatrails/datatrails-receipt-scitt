@@ -58,7 +58,6 @@ def receipt_trie_alg_contents(receiptb64: str) -> Tuple[Any, bool]:
         payload = decoded_msg[1][1]
         public = False
 
-
     contents = json.loads(payload)
     return contents, public
 
