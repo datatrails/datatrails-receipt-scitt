@@ -1,5 +1,5 @@
 """
-RKVST Receipt support common for both khipu and simplehash specifics
+DataTrails Receipt support common for both khipu and simplehash specifics
 """
 import uuid
 from datetime import datetime
@@ -62,7 +62,7 @@ def u256touuidhi(b: bytes) -> str:
 
 class Receipt:
     """
-    This class uses the EIP1186 *neutral* receipt format to encode a receipt for an RKVST event.
+    This class uses the EIP1186 *neutral* receipt format to encode a receipt for a DataTrails event.
 
     serviceparams and contents are as per draft-birkholz-scitt-receipts 2. "Common parameters" & 3. "Generic Receipt Structure".
 
@@ -93,7 +93,7 @@ class Receipt:
         ]
 
     For serviceparams to be fully compliant we need at least two items here:
-    * a permanent service identifier (likely app.rkvst.io)
+    * a permanent service identifier (likely app.datatrails.ai)
     * the trie alg defining the format of contents, currently EIP1186NamedProofs
 
     But the implementation simply assumes this for now.

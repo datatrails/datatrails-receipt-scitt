@@ -1,18 +1,18 @@
 """
-Test rkvst specific proof handling for khipu events
+Test DataTrails specific proof handling for khipu events
 """
 
 import json
 
 from unittest import TestCase
 
-from rkvst_receipt_scitt.khipureceipt import KhipuReceipt
+from datatrails_receipt_scitt.khipureceipt import KhipuReceipt
 
 from .datautils import json_loads_receipt_contents
 
 
 LONG_ANIMAL_NAME_KEY = "animal xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
-DISPLAY_NAME = "test rkvst"
+DISPLAY_NAME = "test datatrails"
 EMAIL = "test@jitsuin.com"
 ISSUER = "jitsuin-d"
 SUBJECT = "test-subject-d"

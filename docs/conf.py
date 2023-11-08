@@ -18,9 +18,9 @@ sys.path.insert(0, os.path.abspath(".."))
 import sphinx_rtd_theme
 
 # -- Project information -----------------------------------------------------
-project = "RKVST"
-copyright = "2022, support@rkvst.com"
-author = "support@rkvst.com"
+project = "DataTrails"
+copyright = "2023, support@datatrails.ai"
+author = "support@datatrails.ai"
 
 version = "0.0.1a"
 release = "0.0.1a"
@@ -81,12 +81,12 @@ myst_enable_extensions = [
 
 # These paths are either relative to html_static_path
 # or fully qualified paths (eg. https://...)
-# Note this assumes that the contents of docs/rkvst-css/* are copied to _site/css/*
+# Note this assumes that the contents of docs/datatrails-css/* are copied to _site/css/*
 html_css_files = [
-    "css/rkvst_theme.css",
+    "css/datatrails_theme.css",
 ]
 html_favicon = "_static/favicon.ico"
-html_logo = "_static/RKVST_WhtLogo_RGB.png"
+html_logo = "_static/DataTrails_WhtLogo_RGB.png"
 html_show_sourcelink = False
 html_show_sphinx = False
 # Add any paths that contain custom static files (such as style sheets) here,

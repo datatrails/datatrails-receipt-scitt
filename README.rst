@@ -1,10 +1,10 @@
 
 .. _readme:
 
-RKVST Scitt Receipt Verification in python
+DataTrails Scitt Receipt Verification in python
 ==========================================
 
-Python support for the offline verification of scitt receipts for rkvst events.
+Python support for the offline verification of scitt receipts for DataTrails events.
 
 
 **Notice**: This work is based on the *draft* standard draft-birkholz-scitt-receipts-02_ . This work and the upstream standard will evolve. We make no current promise of api stability

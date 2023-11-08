@@ -1,4 +1,4 @@
-"""Support decoding of the receipt response from the RKVST /v1/notary/receipts end point
+"""Support decoding of the receipt response from the DataTrails /v1/notary/receipts end point
 
 The format of the receipt follows this *draft* standard draft-birkholz-scitt-receipts-02_
 
@@ -6,7 +6,7 @@ draft-birkholz-scitt-receipts-02_ [3. Generic Receipt Structure]::
 
     [ protected, contents ]
 
-We define the RKVST tree algorithm 'EIP1186NamedSlotProofs' based on EIP1186_ formatted merkle proofs
+We define the DataTrails tree algorithm 'EIP1186NamedSlotProofs' based on EIP1186_ formatted merkle proofs
 
 The protected field is dictated by the standard. The contents field is define by EIP1186NamedSlotProofs
 
