@@ -13,7 +13,7 @@
 
    api
 
-Keep an eye on `DataTrails Docs <https://docs.datatrails.com/docs/overview/introduction/>`_ For guides and howto's
+Keep an eye on `DataTrails Docs <https://docs.datatrails.ai/docs/overview/introduction/>`_ For guides and howto's
 
 Indices and tables
 ==================
