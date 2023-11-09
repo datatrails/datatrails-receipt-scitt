@@ -2,7 +2,7 @@
 .. _readme:
 
 DataTrails Scitt Receipt Verification in python
-==========================================
+===============================================
 
 Python support for the offline verification of scitt receipts for DataTrails events.
 
