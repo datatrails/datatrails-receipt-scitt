@@ -30,9 +30,9 @@ jobs:
 
     - name: Lint code
       run: |
-        pycodestyle --format=pylint rkvst_receipt_scitt unittests
-        python3 -m pylint rkvst_receipt_scitt unittests
-        black rkvst_receipt_scitt unittests
+        pycodestyle --format=pylint datatrails_receipt_scitt unittests
+        python3 -m pylint datatrails_receipt_scitt unittests
+        black datatrails_receipt_scitt unittests
         modified=$(git status -s | wc -l)
         if [ $modified -gt 0 ]
         then
@@ -48,7 +48,7 @@ jobs:
         rm -f coverage.xml
         rm -rf htmlcov
         coverage --version
-        coverage run --branch --source rkvst_receipt_scitt -m unittest -v
+        coverage run --branch --source datatrails_receipt_scitt -m unittest -v
         coverage html --fail-under=65
         coverage xml --fail-under=65
         coverage report --fail-under=65

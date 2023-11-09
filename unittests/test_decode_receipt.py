@@ -1,15 +1,15 @@
 """
-Test decoding of RKVST receipts
+Test decoding of DataTrails receipts
 """
 
 from importlib.resources import read_text  # 3.9 + we should use 'files' instead
 from unittest import TestCase
 
-from rkvst_receipt_scitt.receiptdecoder import (
+from datatrails_receipt_scitt.receiptdecoder import (
     receipt_trie_alg_contents,
     # , receipt_verify_envelope
 )
-from rkvst_receipt_scitt import trie_alg, khipureceipt, simplehashreceipt
+from datatrails_receipt_scitt import trie_alg, khipureceipt, simplehashreceipt
 
 from .wellknown import key
 

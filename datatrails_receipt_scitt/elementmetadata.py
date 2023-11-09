@@ -12,7 +12,7 @@ values from the receipts without :192
 recourse to application domain knowledge. Just
 knowledge of the EVM and the solidity compiler abi.
 
-Applications (including the RKVST) are free to define new element types but
+Applications (including DataTrails) are free to define new element types but
 SHOULD only do so if the intrinsics are insufficient.
 
 In the case of extended types, The app_id and the app_content_ref properties in
@@ -149,7 +149,7 @@ class FieldValues:
     first slot. Due to occupying a full 32 byte slot, baz.
 
     Notes:
-        a) In the current rkvst useage fields occupied by nested slots are
+        a) In the current DataTrails usage fields occupied by nested slots are
         typically omitted and dealt with as a special case (who & when). We
         may in future allow size to be a multiple of 32 to allow for inline
         nested structs.

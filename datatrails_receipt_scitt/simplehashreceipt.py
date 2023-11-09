@@ -1,6 +1,6 @@
 """_summary_
 
-RKVST SimpleHash event receipt specifics
+DataTrails SimpleHash event receipt specifics
 """
 
 from .receipt import utf8bytes32decode, u256touuidhi, Receipt

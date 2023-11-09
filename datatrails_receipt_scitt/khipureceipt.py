@@ -1,5 +1,5 @@
 """
-RKVST Khipu event specifics
+DataTrails Khipu event specifics
 """
 from eth_utils import to_checksum_address
 
@@ -15,7 +15,7 @@ from .receipt import bto3339, u256touuid, Receipt
 
 class KhipuReceiptMalformedAttributes(ValueError):
     """
-    The receipt encoding of the rkvst attributes is malformed
+    The receipt encoding of the datatrails attributes is malformed
     """
 
 
@@ -56,8 +56,8 @@ def _whens_from_rawstorage(rawstorage):
     """
     :param rawstorage: the 3 element list of slot values from the 'when' proof
     """
-    # rkvst_simplehash.V1_FIELDS (in v1.py) defines constants for these dict
-    # keys these in alignment with the public rkvst events api
+    # datatrails_simplehash.V1_FIELDS (in v1.py) defines constants for these dict
+    # keys these in alignment with the public datatrails events api
     return {
         "timestamp_declared": bto3339(rawstorage[WHEN_DECLARED]),
         "timestamp_accepted": bto3339(rawstorage[WHEN_ACCEPTED]),
@@ -94,7 +94,7 @@ class KhipuReceipt(Receipt):
 
         self.namedproofs.decode()
 
-        # Now use RKVST API assumptions to rebuild the event and asset attributes map
+        # Now use DataTrails API assumptions to rebuild the event and asset attributes map
 
         kindnames = self.namedproofs.decoded(ATTRIBUTE_KINDNAMES).arrays
         values = self.namedproofs.decoded(ATTRIBUTE_VALUES).arrays
@@ -136,8 +136,8 @@ class KhipuReceipt(Receipt):
         whens = _whens_from_rawstorage(self.namedproofs.decoded("when").values)
 
         # Note: this dict is aligned with the constants and event structure we
-        # work with in the rkvst-simplehash-python package.  see
-        # rkvst_simplehash.V1_FIELDS (in v1.py)
+        # work with in the datatrails-simplehash-python package.  see
+        # datatrails_simplehash.V1_FIELDS (in v1.py)
         event = {
             "identity": f"assets/{assetUUID}/events/{eventUUID}",
             "asset_identity": f"assets/{assetUUID}",

@@ -4,8 +4,8 @@ Test handling of the named proofs in the contents of the receipts
 
 from unittest import TestCase
 
-from rkvst_receipt_scitt.namedproofs import NamedProofs, NamedProofsMissingProof
-from rkvst_receipt_scitt.khipureceipt import EXTRA_PARAMETERS, MANIFEST_ELEMENTS
+from datatrails_receipt_scitt.namedproofs import NamedProofs, NamedProofsMissingProof
+from datatrails_receipt_scitt.khipureceipt import EXTRA_PARAMETERS, MANIFEST_ELEMENTS
 
 from .datautils import json_loads_receipt_contents
 

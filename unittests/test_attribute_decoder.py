@@ -4,7 +4,7 @@ Test attribute decoder functions
 
 from unittest import TestCase
 
-from rkvst_receipt_scitt.attribute_decoder import (
+from datatrails_receipt_scitt.attribute_decoder import (
     decode_attribute_key,
     decode_attribute_value,
     AttributeType,

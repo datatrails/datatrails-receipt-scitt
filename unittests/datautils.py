@@ -3,7 +3,7 @@ helpers for getting at the test data
 """
 from importlib.resources import read_text  # 3.9 + we should use 'files' instead
 
-from rkvst_receipt_scitt.receiptdecoder import receipt_trie_alg_contents
+from datatrails_receipt_scitt.receiptdecoder import receipt_trie_alg_contents
 
 
 def json_loads_receipt_contents(datafilename) -> dict:

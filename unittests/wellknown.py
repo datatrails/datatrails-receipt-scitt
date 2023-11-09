@@ -2,13 +2,12 @@
 
 We use this by way of example for alignment with the wider standards effort.
 
-RKVST does not currently sign receipts with any meaningful key.  It is
-implausible that the merkle proofs in combination with captured block headers
+It is implausible that the merkle proofs in combination with captured block headers
 could be spoofed.
 
 We MAY in future sign claims with a meaningful key to grant authority in
 perpetuity to redeem the claim for a receipt. But once the receipt is in
-your hands its testimony is completely independent of the RKVST platform.
+your hands its testimony is completely independent of the DataTrails platform.
 
 """
 

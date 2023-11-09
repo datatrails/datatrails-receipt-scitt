@@ -18,7 +18,7 @@ VALUE_TYPE_DICT = "dictv2"
 
 class AttributeType(Enum):
     """
-    Attribute type is the type of attributes supported by rkvst events
+    Attribute type is the type of attributes supported by DataTrails events
     """
 
     ASSET = 1

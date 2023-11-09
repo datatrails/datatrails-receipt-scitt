@@ -1,10 +1,10 @@
-""" Module for implementation of rkvst scitt receipt verification"""
+""" Module for implementation of DataTrails SCITT receipt verification"""
 import sys
 import argparse
 import json
-from rkvst_receipt_scitt.receiptdecoder import receipt_trie_alg_contents
-from rkvst_receipt_scitt.khipureceipt import KhipuReceipt
-from rkvst_receipt_scitt.simplehashreceipt import SimpleHashReceipt
+from datatrails_receipt_scitt.receiptdecoder import receipt_trie_alg_contents
+from datatrails_receipt_scitt.khipureceipt import KhipuReceipt
+from datatrails_receipt_scitt.simplehashreceipt import SimpleHashReceipt
 
 SIMPLE_HASH_ELEMENT = "simplehash"
 
@@ -40,7 +40,7 @@ def api_query(decoded: dict, fqdn: str, public: bool = False):
 
     assets_resource = "publicassets" if public else "assets"
 
-    # Note: this MUST align with rkvst-simplehash-python's approach
+    # Note: this MUST align with datatrails-simplehash-python's approach
     path = f"https://{fqdn}/archivist/v2/{assets_resource}/-/events"
     path += "?order_by=SIMPLEHASHV2&proof_mechanism=SIMPLE_HASH"
     path += f"&timestamp_accepted_since={decoded['startTimeRFC3339']}"
@@ -61,7 +61,7 @@ def main(args=None):  # pragma: no cover
         "-d",
         "--decode",
         action="store_true",
-        help="also decode the RKVST event from the proven values",
+        help="also decode the DataTrails event from the proven values",
     )
     s.add_argument(
         "-w",
@@ -74,8 +74,8 @@ not supplied the account existence is not verified.
     )
     s.add_argument(
         "--fqdn",
-        help="The fully qualified domain name of the rkvst deployment",
-        default="app.rkvst.io",
+        help="The fully qualified domain name of the DataTrails deployment",
+        default="app.datatrails.ai",
     )
     s.add_argument(
         "receipt",

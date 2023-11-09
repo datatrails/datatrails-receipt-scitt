@@ -9,7 +9,7 @@ fail_under = 100
 enabled = true
 
 [tool.pyright]
-include = ["rkvst_receipt_scitt"]
+include = ["datatrails_receipt_scitt"]
 
 
 [tool.pylint.main]

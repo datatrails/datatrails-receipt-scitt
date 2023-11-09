@@ -1,12 +1,12 @@
 """
-Test rkvst specific proof handling for khipu events
+Test DataTrails specific proof handling for khipu events
 """
 
 import json
 
 from unittest import TestCase
 
-from rkvst_receipt_scitt.simplehashreceipt import SimpleHashReceipt
+from datatrails_receipt_scitt.simplehashreceipt import SimpleHashReceipt
 
 from .datautils import json_loads_receipt_contents
 

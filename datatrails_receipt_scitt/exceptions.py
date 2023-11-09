@@ -1,4 +1,4 @@
-""" Module for execptions for rkvst receipt scitt"""
+""" Module for execptions for datatrails receipt scitt"""
 
 
 class InvalidAttributeType(Exception):

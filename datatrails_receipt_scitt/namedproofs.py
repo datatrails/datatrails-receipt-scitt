@@ -1,8 +1,8 @@
 """
 This file deals in a generic way with the name_proofs component of the contents
-defined for the receipt by the RKVST  EIP1186namedProofs Tree algorithm.
+defined for the receipt by the DataTrails EIP1186namedProofs Tree algorithm.
 
-See khipureceipt.py or simplehashreceipt.py for rkvst specific conveniences.
+See khipureceipt.py or simplehashreceipt.py for datatrails specific conveniences.
 """
 from eth_utils import decode_hex
 from . import trie_alg
@@ -80,7 +80,7 @@ class NamedProofs:
             list is required.
         """
 
-        # Note: the format allows for multiple proofs with the same name. RKVST
+        # Note: the format allows for multiple proofs with the same name. DataTrails
         # khipu proofs do not make use of that so all names are known to be
         # unique.
 
