@@ -185,7 +185,6 @@ class FieldValues:
         islotvalue = 0
         storageslot = 0
         for field in metadata["fields"]:
-
             # every time the storage slot changes we bump the index into our
             # slotvalues array. This is a bit awkward, we will likely change the
             # metadata to make it less so.
