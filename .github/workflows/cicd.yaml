@@ -9,25 +9,22 @@ permissions:
 
 jobs:
   build-and-test:
-    runs-on: ubuntu-latest
-
     strategy:
       matrix:
-        python-version: ['3.7', '3.8', '3.9', '3.10', '3.11']
-
+        python-version: ['3.8', '3.9', '3.10', '3.11', '3.12']
+        os: [ubuntu-latest, windows-latest]
+    runs-on: ${{ matrix.os }}
     steps:
-    - uses: actions/checkout@v2
-
+    - uses: actions/checkout@v4
     - name: Set up Python ${{ matrix.python-version }}
-      uses: actions/setup-python@v2
+      uses: actions/setup-python@v4
       with:
         python-version: ${{ matrix.python-version }}
-
     - name: Install dependencies
       run: |
         python -m pip install --upgrade pip
         pip install -r requirements-dev.txt
-
+      shell: bash
     - name: Lint code
       run: |
         pycodestyle --format=pylint datatrails_receipt_scitt unittests
@@ -39,10 +36,9 @@ jobs:
             echo "there are $modified files that must be reformatted"
             exit 1
         fi
-
+      shell: bash
     - name: Run tests
       run: |
-
         python3 -m unittest
 
         rm -f coverage.xml
@@ -52,16 +48,4 @@ jobs:
         coverage html --fail-under=65
         coverage xml --fail-under=65
         coverage report --fail-under=65
-
-    - name: Setup Pages
-      uses: actions/configure-pages@v3
-    - name: Build with sphinx
-      run: |
-        mkdir -p docs/_site
-        cp -r docs/_static docs/_site/
-        sphinx-build -b html docs docs/_site
-
-    - name: Upload docs artifact
-      uses: actions/upload-pages-artifact@v1
-      with:
-        path: ./docs/_site
+      shell: bash

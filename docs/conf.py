@@ -42,7 +42,6 @@ extensions = [
     "sphinx.ext.napoleon",
     "sphinx.ext.todo",
     "sphinx.ext.viewcode",
-    "myst_parser",  # markdown
 ]
 
 # Add any paths that contain templates here, relative to this directory.
@@ -99,13 +98,3 @@ html_theme_options = {
     "analytics_id": "G-7K46H3KK7N",  #  Provided by Google in your dashboard
     "logo_only": True,
 }
-
-
-# -- Notebooks -------------------------------------------------
-nbsphinx_execute = "never"
-
-# -- Spelling -------------------------------------------------
-spelling_lang = "en_US"
-spelling_word_list_filename = "spelling_wordlist.txt"
-spelling_show_suggestions = True
-spelling_verbose = True
