@@ -1,0 +1,45 @@
+version: '3'
+
+tasks:
+
+  audit:
+    desc: Audit the code
+    cmds:
+      - python3 -m pip-audit -r requirements.txt
+
+  check:
+    desc: Check the style, bug and quality of the code
+    cmds:
+      - python3 --version
+      - pycodestyle --format=pylint datatrails_receipt_scitt unittests
+      - python3 -m pylint datatrails_receipt_scitt unittests
+
+  clean:
+    desc: Clean git repo
+    cmds:
+      - find -name '*,cover' -type f -delete
+      - git clean -fdX
+
+  format:
+    desc: Format code using black
+    cmds:
+      - python3 -m black datatrails_receipt_scitt unittests
+
+  unittests:
+    desc: Run unittests
+    cmds:
+      - python3 -m unittest
+
+  venv:
+    desc: Builds python environment - requires wheel
+    cmds:
+      - ./scripts/venv.sh
+
+  wheel:
+    desc: Builds python wheel package
+    cmds:
+      - python3 -m pip install --upgrade pip
+      - python3 -m pip install -r requirements-dev.txt
+      - python3 -m pip install setuptools wheel
+      - python3 -m build --sdist
+      - python3 -m build --wheel
