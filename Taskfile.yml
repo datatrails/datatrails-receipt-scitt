@@ -4,15 +4,32 @@ tasks:
 
   audit:
     desc: Audit the code
+    deps:
+      - task: venv
     cmds:
-      - python3 -m pip-audit -r requirements.txt
+      - |
+        set -e
+        source venvs/receipt-scitt/bin/activate
+
+        pip-audit -r requirements.txt
+        pip-audit -r requirements-dev.txt
+        
+        deactivate
 
   check:
     desc: Check the style, bug and quality of the code
+    deps:
+      - task: venv
     cmds:
-      - python3 --version
-      - pycodestyle --format=pylint datatrails_receipt_scitt unittests
-      - python3 -m pylint datatrails_receipt_scitt unittests
+      - |
+        set -e
+        source venvs/receipt-scitt/bin/activate
+
+        python3 --version
+        pycodestyle --format=pylint datatrails_receipt_scitt unittests
+        python3 -m pylint datatrails_receipt_scitt unittests
+        
+        deactivate
 
   clean:
     desc: Clean git repo
@@ -22,19 +39,58 @@ tasks:
 
   format:
     desc: Format code using black
+    deps:
+      - task: venv
     cmds:
-      - python3 -m black datatrails_receipt_scitt unittests
+      - |
+        set -e
+        source venvs/receipt-scitt/bin/activate
+
+        python3 -m black datatrails_receipt_scitt unittests
+        
+        deactivate
 
   unittests:
     desc: Run unittests
+    deps:
+      - task: venv
     cmds:
-      - python3 -m unittest
+      - |
+        set -e
+        source venvs/receipt-scitt/bin/activate
+
+        python3 -m unittest
+        
+        deactivate
+
+  venv:
+    desc: Builds python environment
+    cmds: 
+      - |
+        set -e
+        if [ ! -d venvs/receipt-scitt ]
+        then
+            python3 -m venv venvs/receipt-scitt
+            source venvs/receipt-scitt/bin/activate
+            python3 -m pip install -qq -r requirements.txt
+            python3 -m pip install -qq -r requirements-dev.txt
+            deactivate
+        fi
 
   wheel:
     desc: Builds python wheel package
+    deps:
+      - task: venv
     cmds:
-      - python3 -m pip install --upgrade pip
-      - python3 -m pip install -r requirements-dev.txt
-      - python3 -m pip install setuptools wheel
-      - python3 -m build --sdist
-      - python3 -m build --wheel
+      - |
+        set -e
+        source venvs/receipt-scitt/bin/activate
+
+        python3 -m pip install --upgrade pip
+        python3 -m pip install -r requirements-dev.txt
+        python3 -m pip install setuptools wheel
+        python3 -m build --sdist
+        python3 -m build --wheel
+        
+        deactivate
+
