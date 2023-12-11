@@ -30,11 +30,6 @@ tasks:
     cmds:
       - python3 -m unittest
 
-  venv:
-    desc: Builds python environment - requires wheel
-    cmds:
-      - ./scripts/venv.sh
-
   wheel:
     desc: Builds python wheel package
     cmds:
