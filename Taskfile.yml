@@ -12,7 +12,6 @@ tasks:
         source venvs/receipt-scitt/bin/activate
 
         pip-audit -r requirements.txt
-        pip-audit -r requirements-dev.txt
         
         deactivate
 
