@@ -1,0 +1,289 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>datatrails_receipt_scitt.attribute_decoder &mdash; DataTrails 0.0.1a documentation</title>
+      <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+      <link rel="stylesheet" href="../../_static/sg_gallery.css" type="text/css" />
+      <link rel="stylesheet" href="../../_static/css/datatrails_theme.css" type="text/css" />
+    <link rel="shortcut icon" href="../../_static/favicon.ico"/>
+  <!--[if lt IE 9]>
+    <script src="../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script src="../../_static/jquery.js?v=5d32c60e"></script>
+        <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+        <script src="../../_static/documentation_options.js?v=8c8a9e14"></script>
+        <script src="../../_static/doctools.js?v=888ff710"></script>
+        <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../index.html">
+            
+              <img src="../../_static/DataTrails_WhtLogo_RGB.png" class="logo" alt="Logo"/>
+          </a>
+              <div class="version">
+                0.0.1a
+              </div>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Scitt Receipt Verification</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../api.html">API</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">DataTrails</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../index.html">Module code</a></li>
+      <li class="breadcrumb-item active">datatrails_receipt_scitt.attribute_decoder</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for datatrails_receipt_scitt.attribute_decoder</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">Module for decoding on chain attributes into the format returned from the event api</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="kn">from</span> <span class="nn">__future__</span> <span class="kn">import</span> <span class="n">annotations</span>
+
+<span class="kn">from</span> <span class="nn">enum</span> <span class="kn">import</span> <span class="n">Enum</span>
+
+<span class="kn">from</span> <span class="nn">rlp.sedes</span> <span class="kn">import</span> <span class="n">binary</span><span class="p">,</span> <span class="n">List</span>
+
+<span class="kn">from</span> <span class="nn">rlp</span> <span class="kn">import</span> <span class="n">decode</span><span class="p">,</span> <span class="n">decode_lazy</span><span class="p">,</span> <span class="n">peek</span><span class="p">,</span> <span class="n">DeserializationError</span>
+
+<span class="kn">from</span> <span class="nn">.exceptions</span> <span class="kn">import</span> <span class="n">InvalidAttributeType</span>
+
+<span class="n">VALUE_TYPE_LIST</span> <span class="o">=</span> <span class="s2">&quot;listv2&quot;</span>
+<span class="n">VALUE_TYPE_DICT</span> <span class="o">=</span> <span class="s2">&quot;dictv2&quot;</span>
+
+
+<div class="viewcode-block" id="AttributeType">
+<a class="viewcode-back" href="../../api.html#datatrails_receipt_scitt.attribute_decoder.AttributeType">[docs]</a>
+<span class="k">class</span> <span class="nc">AttributeType</span><span class="p">(</span><span class="n">Enum</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Attribute type is the type of attributes supported by DataTrails events</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">ASSET</span> <span class="o">=</span> <span class="mi">1</span>
+    <span class="n">EVENT</span> <span class="o">=</span> <span class="mi">2</span></div>
+
+
+
+<div class="viewcode-block" id="decode_attribute_value">
+<a class="viewcode-back" href="../../api.html#datatrails_receipt_scitt.attribute_decoder.decode_attribute_value">[docs]</a>
+<span class="k">def</span> <span class="nf">decode_attribute_value</span><span class="p">(</span><span class="n">attrvalue</span><span class="p">:</span> <span class="nb">bytes</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span> <span class="o">|</span> <span class="nb">list</span> <span class="o">|</span> <span class="nb">dict</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    decode an rlp encoded attribute value</span>
+
+<span class="sd">    :param str hex: an rlp encoded hexadecimal string,</span>
+<span class="sd">                    e.g. 0xe5866c6973747632cecd87676972...</span>
+
+<span class="sd">    :returns: one of:</span>
+
+<span class="sd">        * a string value</span>
+<span class="sd">        * a dictionary value</span>
+<span class="sd">        * a list of dictionary values</span>
+
+<span class="sd">    the rlp encoded list value is of the shape::</span>
+
+<span class="sd">      [][][]string {</span>
+<span class="sd">        [</span>
+<span class="sd">          &quot;listv2&quot;</span>
+<span class="sd">        ],</span>
+<span class="sd">        [</span>
+<span class="sd">          [</span>
+<span class="sd">            [</span>
+<span class="sd">              &quot;giraffe&quot;, &lt;- key</span>
+<span class="sd">              &quot;tall&quot; &lt;- value</span>
+<span class="sd">            ],</span>
+<span class="sd">          ],</span>
+<span class="sd">        ],</span>
+<span class="sd">        [</span>
+<span class="sd">          [</span>
+<span class="sd">            [</span>
+<span class="sd">              &quot;elephant&quot;, &lt;- key</span>
+<span class="sd">              &quot;big&quot; &lt;- value</span>
+<span class="sd">            ],</span>
+<span class="sd">          ],</span>
+<span class="sd">        ]</span>
+<span class="sd">      }</span>
+
+<span class="sd">    the rlp encoded dict value is of the shape::</span>
+
+<span class="sd">      [][]string {</span>
+<span class="sd">        [</span>
+<span class="sd">          [</span>
+<span class="sd">            &quot;dictv2&quot;,</span>
+<span class="sd">          ],</span>
+<span class="sd">          [</span>
+<span class="sd">            &quot;giraffe&quot;, &lt;- key</span>
+<span class="sd">            &quot;tall&quot; &lt;- value</span>
+<span class="sd">          ],</span>
+<span class="sd">          [</span>
+<span class="sd">            &quot;elephant&quot;, &lt;- key</span>
+<span class="sd">            &quot;big&quot; &lt;- value</span>
+<span class="sd">          ]</span>
+<span class="sd">        ]</span>
+<span class="sd">      }</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="c1"># first see if its a string value</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">value</span> <span class="o">=</span> <span class="n">decode</span><span class="p">(</span><span class="n">attrvalue</span><span class="p">,</span> <span class="n">binary</span><span class="p">)</span><span class="o">.</span><span class="n">decode</span><span class="p">(</span><span class="s2">&quot;utf-8&quot;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">value</span>
+    <span class="k">except</span> <span class="n">DeserializationError</span><span class="p">:</span>
+        <span class="c1"># if we have a deserialization error here, it means we are not dealing with a string value</span>
+        <span class="k">pass</span>
+
+    <span class="c1"># if its not a string value it must be a list or a dictionary</span>
+
+    <span class="n">listv2_attribute_value</span> <span class="o">=</span> <span class="n">List</span><span class="p">([</span><span class="n">List</span><span class="p">([</span><span class="n">binary</span><span class="p">,</span> <span class="n">binary</span><span class="p">])])</span>
+    <span class="n">dictv2_attribute_value</span> <span class="o">=</span> <span class="n">List</span><span class="p">([</span><span class="n">binary</span><span class="p">,</span> <span class="n">binary</span><span class="p">])</span>
+
+    <span class="c1"># if we lazily decode the rlp without a sedes, we can iterate through</span>
+    <span class="c1">#  each list element decoding them one at a time</span>
+    <span class="n">decoded_value</span> <span class="o">=</span> <span class="n">decode_lazy</span><span class="p">(</span><span class="n">attrvalue</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+
+    <span class="n">value_type</span> <span class="o">=</span> <span class="kc">None</span>
+
+    <span class="n">list_value</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">dict_value</span> <span class="o">=</span> <span class="p">{}</span>
+
+    <span class="k">for</span> <span class="n">index</span><span class="p">,</span> <span class="n">element</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">decoded_value</span><span class="p">):</span>
+        <span class="c1"># first index determines which value type we have,</span>
+        <span class="c1">#   list or dict</span>
+        <span class="k">if</span> <span class="n">index</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="n">value_type</span> <span class="o">=</span> <span class="n">element</span><span class="o">.</span><span class="n">decode</span><span class="p">(</span><span class="s2">&quot;utf-8&quot;</span><span class="p">)</span>
+            <span class="k">continue</span>
+
+        <span class="c1"># attribute value is a list</span>
+        <span class="k">if</span> <span class="n">value_type</span> <span class="o">==</span> <span class="n">VALUE_TYPE_LIST</span><span class="p">:</span>
+            <span class="n">value</span> <span class="o">=</span> <span class="n">peek</span><span class="p">(</span><span class="n">element</span><span class="o">.</span><span class="n">rlp</span><span class="p">,</span> <span class="n">index</span><span class="p">,</span> <span class="n">listv2_attribute_value</span><span class="p">)</span>
+
+            <span class="n">value_dict</span> <span class="o">=</span> <span class="p">{</span><span class="n">value</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">decode</span><span class="p">(</span><span class="s2">&quot;utf-8&quot;</span><span class="p">):</span> <span class="n">value</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">decode</span><span class="p">(</span><span class="s2">&quot;utf-8&quot;</span><span class="p">)}</span>
+
+            <span class="n">list_value</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">value_dict</span><span class="p">)</span>
+            <span class="k">continue</span>
+
+        <span class="c1"># attribute value is a dict</span>
+        <span class="k">if</span> <span class="n">value_type</span> <span class="o">==</span> <span class="n">VALUE_TYPE_DICT</span><span class="p">:</span>
+            <span class="n">value</span> <span class="o">=</span> <span class="n">peek</span><span class="p">(</span><span class="n">element</span><span class="o">.</span><span class="n">rlp</span><span class="p">,</span> <span class="n">index</span><span class="p">,</span> <span class="n">dictv2_attribute_value</span><span class="p">)</span>
+
+            <span class="n">dict_value</span><span class="p">[</span><span class="n">value</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">decode</span><span class="p">(</span><span class="s2">&quot;utf-8&quot;</span><span class="p">)]</span> <span class="o">=</span> <span class="n">value</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">decode</span><span class="p">(</span><span class="s2">&quot;utf-8&quot;</span><span class="p">)</span>
+            <span class="k">continue</span>
+
+    <span class="c1"># determine whether we should return a list or dict</span>
+    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">list_value</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">dict_value</span>
+    <span class="k">return</span> <span class="n">list_value</span></div>
+
+
+
+<div class="viewcode-block" id="decode_attribute_key">
+<a class="viewcode-back" href="../../api.html#datatrails_receipt_scitt.attribute_decoder.decode_attribute_key">[docs]</a>
+<span class="k">def</span> <span class="nf">decode_attribute_key</span><span class="p">(</span><span class="n">kind_name</span><span class="p">:</span> <span class="nb">bytes</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="n">AttributeType</span><span class="p">,</span> <span class="nb">str</span><span class="p">]:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Decodes the attribute kind&lt;-&gt;name pairing into the attribute kind and keys</span>
+
+<span class="sd">    :param str kind_name: the rlp encoded attribute kind concatenated with the attribute key encoded as a hex string, e.g. 0x8767697261666665...</span>
+
+
+<span class="sd">    :return: a tuple of (attribute type, attribute key)</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="c1"># &quot;&quot;&quot;</span>
+    <span class="c1"># :param kind_name: str the rlp encoded attribute kind concatenated with the attribute key encoded as a hex string, e.g. 0x8767697261666665...</span>
+    <span class="c1"># :return: a tuple of (attribute type, attribute key)</span>
+    <span class="c1"># &quot;&quot;&quot;</span>
+    <span class="n">kind_name_sedes</span> <span class="o">=</span> <span class="n">List</span><span class="p">([</span><span class="n">binary</span><span class="p">,</span> <span class="n">binary</span><span class="p">])</span>
+
+    <span class="n">decoded_kind_name</span> <span class="o">=</span> <span class="n">decode</span><span class="p">(</span><span class="n">kind_name</span><span class="p">,</span> <span class="n">kind_name_sedes</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">decoded_kind_name</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">decode</span><span class="p">(</span><span class="s2">&quot;utf-8&quot;</span><span class="p">)</span> <span class="o">==</span> <span class="n">AttributeType</span><span class="o">.</span><span class="n">ASSET</span><span class="o">.</span><span class="n">name</span><span class="o">.</span><span class="n">lower</span><span class="p">():</span>
+        <span class="n">kind</span> <span class="o">=</span> <span class="n">AttributeType</span><span class="o">.</span><span class="n">ASSET</span>
+        <span class="n">key</span> <span class="o">=</span> <span class="n">decoded_kind_name</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">decode</span><span class="p">(</span><span class="s2">&quot;utf-8&quot;</span><span class="p">)</span>
+
+    <span class="k">elif</span> <span class="n">decoded_kind_name</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">decode</span><span class="p">(</span><span class="s2">&quot;utf-8&quot;</span><span class="p">)</span> <span class="o">==</span> <span class="n">AttributeType</span><span class="o">.</span><span class="n">EVENT</span><span class="o">.</span><span class="n">name</span><span class="o">.</span><span class="n">lower</span><span class="p">():</span>
+        <span class="n">kind</span> <span class="o">=</span> <span class="n">AttributeType</span><span class="o">.</span><span class="n">EVENT</span>
+        <span class="n">key</span> <span class="o">=</span> <span class="n">decoded_kind_name</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">decode</span><span class="p">(</span><span class="s2">&quot;utf-8&quot;</span><span class="p">)</span>
+
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="n">InvalidAttributeType</span>
+
+    <span class="k">return</span> <span class="p">(</span><span class="n">kind</span><span class="p">,</span> <span class="n">key</span><span class="p">)</span></div>
+
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2023, support@datatrails.ai.</p>
+  </div>
+
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+    <!-- Theme Analytics -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-7K46H3KK7N"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+
+      gtag('config', 'G-7K46H3KK7N', {
+          'anonymize_ip': false,
+      });
+    </script> 
+
+</body>
+</html>

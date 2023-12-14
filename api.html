@@ -1,0 +1,468 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>API &mdash; DataTrails 0.0.1a documentation</title>
+      <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+      <link rel="stylesheet" href="_static/sg_gallery.css" type="text/css" />
+      <link rel="stylesheet" href="_static/css/datatrails_theme.css" type="text/css" />
+    <link rel="shortcut icon" href="_static/favicon.ico"/>
+  <!--[if lt IE 9]>
+    <script src="_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script src="_static/jquery.js?v=5d32c60e"></script>
+        <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+        <script src="_static/documentation_options.js?v=8c8a9e14"></script>
+        <script src="_static/doctools.js?v=888ff710"></script>
+        <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="prev" title="DataTrails Scitt Receipt Verification in python" href="index.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="index.html">
+            
+              <img src="_static/DataTrails_WhtLogo_RGB.png" class="logo" alt="Logo"/>
+          </a>
+              <div class="version">
+                0.0.1a
+              </div>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Scitt Receipt Verification</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="current reference internal" href="#">API</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#datatrails_receipt_scitt.attribute_decoder.AttributeType"><code class="docutils literal notranslate"><span class="pre">AttributeType</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#datatrails_receipt_scitt.attribute_decoder.decode_attribute_key"><code class="docutils literal notranslate"><span class="pre">decode_attribute_key()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#datatrails_receipt_scitt.attribute_decoder.decode_attribute_value"><code class="docutils literal notranslate"><span class="pre">decode_attribute_value()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#datatrails_receipt_scitt.elementmetadata.ByteArrays"><code class="docutils literal notranslate"><span class="pre">ByteArrays</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#datatrails_receipt_scitt.elementmetadata.FieldValues"><code class="docutils literal notranslate"><span class="pre">FieldValues</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#datatrails_receipt_scitt.elementmetadata.FieldValues.fields"><code class="docutils literal notranslate"><span class="pre">FieldValues.fields()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#datatrails_receipt_scitt.elementmetadata.FieldValues.value"><code class="docutils literal notranslate"><span class="pre">FieldValues.value()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#datatrails_receipt_scitt.elementmetadata.MetadataError"><code class="docutils literal notranslate"><span class="pre">MetadataError</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#datatrails_receipt_scitt.elementmetadata.SlotArray"><code class="docutils literal notranslate"><span class="pre">SlotArray</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#datatrails_receipt_scitt.ethproofs.VerifyFailed"><code class="docutils literal notranslate"><span class="pre">VerifyFailed</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#datatrails_receipt_scitt.ethproofs.verify_eth_account_proof"><code class="docutils literal notranslate"><span class="pre">verify_eth_account_proof()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#datatrails_receipt_scitt.ethproofs.verify_eth_storage_proof"><code class="docutils literal notranslate"><span class="pre">verify_eth_storage_proof()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#datatrails_receipt_scitt.exceptions.InvalidAttributeType"><code class="docutils literal notranslate"><span class="pre">InvalidAttributeType</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#datatrails_receipt_scitt.khipureceipt.KhipuReceipt"><code class="docutils literal notranslate"><span class="pre">KhipuReceipt</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#datatrails_receipt_scitt.khipureceipt.KhipuReceipt.decode"><code class="docutils literal notranslate"><span class="pre">KhipuReceipt.decode()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#datatrails_receipt_scitt.khipureceipt.KhipuReceipt.verify"><code class="docutils literal notranslate"><span class="pre">KhipuReceipt.verify()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#datatrails_receipt_scitt.khipureceipt.KhipuReceiptMalformedAttributes"><code class="docutils literal notranslate"><span class="pre">KhipuReceiptMalformedAttributes</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#datatrails_receipt_scitt.receiptdecoder.receipt_trie_alg_contents"><code class="docutils literal notranslate"><span class="pre">receipt_trie_alg_contents()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="#datatrails_receipt_scitt.receiptdecoder.receipt_verify_envelope"><code class="docutils literal notranslate"><span class="pre">receipt_verify_envelope()</span></code></a></li>
+</ul>
+</li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">DataTrails</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">API</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="api">
+<h1>API<a class="headerlink" href="#api" title="Link to this heading"></a></h1>
+<table class="autosummary longtable docutils align-default">
+<tbody>
+</tbody>
+</table>
+<p id="module-datatrails_receipt_scitt.attribute_decoder">Module for decoding on chain attributes into the format returned from the event api</p>
+<dl class="py class">
+<dt class="sig sig-object py" id="datatrails_receipt_scitt.attribute_decoder.AttributeType">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">datatrails_receipt_scitt.attribute_decoder.</span></span><span class="sig-name descname"><span class="pre">AttributeType</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">value</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">names</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">values</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">module</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">qualname</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">type</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">start</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">boundary</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/datatrails_receipt_scitt/attribute_decoder.html#AttributeType"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#datatrails_receipt_scitt.attribute_decoder.AttributeType" title="Link to this definition"></a></dt>
+<dd><p>Attribute type is the type of attributes supported by DataTrails events</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="datatrails_receipt_scitt.attribute_decoder.decode_attribute_key">
+<span class="sig-prename descclassname"><span class="pre">datatrails_receipt_scitt.attribute_decoder.</span></span><span class="sig-name descname"><span class="pre">decode_attribute_key</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">kind_name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bytes</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">tuple</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="#datatrails_receipt_scitt.attribute_decoder.AttributeType" title="datatrails_receipt_scitt.attribute_decoder.AttributeType"><span class="pre">AttributeType</span></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="_modules/datatrails_receipt_scitt/attribute_decoder.html#decode_attribute_key"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#datatrails_receipt_scitt.attribute_decoder.decode_attribute_key" title="Link to this definition"></a></dt>
+<dd><p>Decodes the attribute kind&lt;-&gt;name pairing into the attribute kind and keys</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>kind_name</strong> (<em>str</em>) – the rlp encoded attribute kind concatenated with the attribute key encoded as a hex string, e.g. 0x8767697261666665…</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>a tuple of (attribute type, attribute key)</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="datatrails_receipt_scitt.attribute_decoder.decode_attribute_value">
+<span class="sig-prename descclassname"><span class="pre">datatrails_receipt_scitt.attribute_decoder.</span></span><span class="sig-name descname"><span class="pre">decode_attribute_value</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">attrvalue</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bytes</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">list</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">dict</span></span></span><a class="reference internal" href="_modules/datatrails_receipt_scitt/attribute_decoder.html#decode_attribute_value"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#datatrails_receipt_scitt.attribute_decoder.decode_attribute_value" title="Link to this definition"></a></dt>
+<dd><p>decode an rlp encoded attribute value</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>hex</strong> (<em>str</em>) – an rlp encoded hexadecimal string,
+e.g. 0xe5866c6973747632cecd87676972…</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><p>one of:</p>
+<ul class="simple">
+<li><p>a string value</p></li>
+<li><p>a dictionary value</p></li>
+<li><p>a list of dictionary values</p></li>
+</ul>
+</p>
+</dd>
+</dl>
+<p>the rlp encoded list value is of the shape:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">[][][]</span><span class="n">string</span> <span class="p">{</span>
+  <span class="p">[</span>
+    <span class="s2">&quot;listv2&quot;</span>
+  <span class="p">],</span>
+  <span class="p">[</span>
+    <span class="p">[</span>
+      <span class="p">[</span>
+        <span class="s2">&quot;giraffe&quot;</span><span class="p">,</span> <span class="o">&lt;-</span> <span class="n">key</span>
+        <span class="s2">&quot;tall&quot;</span> <span class="o">&lt;-</span> <span class="n">value</span>
+      <span class="p">],</span>
+    <span class="p">],</span>
+  <span class="p">],</span>
+  <span class="p">[</span>
+    <span class="p">[</span>
+      <span class="p">[</span>
+        <span class="s2">&quot;elephant&quot;</span><span class="p">,</span> <span class="o">&lt;-</span> <span class="n">key</span>
+        <span class="s2">&quot;big&quot;</span> <span class="o">&lt;-</span> <span class="n">value</span>
+      <span class="p">],</span>
+    <span class="p">],</span>
+  <span class="p">]</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>the rlp encoded dict value is of the shape:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">[][]</span><span class="n">string</span> <span class="p">{</span>
+  <span class="p">[</span>
+    <span class="p">[</span>
+      <span class="s2">&quot;dictv2&quot;</span><span class="p">,</span>
+    <span class="p">],</span>
+    <span class="p">[</span>
+      <span class="s2">&quot;giraffe&quot;</span><span class="p">,</span> <span class="o">&lt;-</span> <span class="n">key</span>
+      <span class="s2">&quot;tall&quot;</span> <span class="o">&lt;-</span> <span class="n">value</span>
+    <span class="p">],</span>
+    <span class="p">[</span>
+      <span class="s2">&quot;elephant&quot;</span><span class="p">,</span> <span class="o">&lt;-</span> <span class="n">key</span>
+      <span class="s2">&quot;big&quot;</span> <span class="o">&lt;-</span> <span class="n">value</span>
+    <span class="p">]</span>
+  <span class="p">]</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<p id="module-datatrails_receipt_scitt.elementmetadata">The EIP1186NamedProofs trie algorithm defines three proof metadata formats.</p>
+<p>Note that the proofs are always for the raw storage values. Those are proven to
+be ‘on-chain’ regardless of the metadata. The metadata provides for round
+tripping between the raw storage values and its application level
+representation.</p>
+<p>The three formats defined here are intrinsic to this trie algorithm. They are
+defined to be application neutral. They focus on recovering the proven application
+values from the receipts without :192
+recourse to application domain knowledge. Just
+knowledge of the EVM and the solidity compiler abi.</p>
+<p>Applications (including DataTrails) are free to define new element types but
+SHOULD only do so if the intrinsics are insufficient.</p>
+<p>In the case of extended types, The app_id and the app_content_ref properties in
+the application_parameters in the receipt MUST reference the information
+necessary to interpret the proven values.</p>
+<p>In many cases we would expect the raw proof values to be sufficient from an
+evidentiary perspective.</p>
+<dl class="py class">
+<dt class="sig sig-object py" id="datatrails_receipt_scitt.elementmetadata.ByteArrays">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">datatrails_receipt_scitt.elementmetadata.</span></span><span class="sig-name descname"><span class="pre">ByteArrays</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">storageproofs</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">list</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">metadata</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">dict</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/datatrails_receipt_scitt/elementmetadata.html#ByteArrays"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#datatrails_receipt_scitt.elementmetadata.ByteArrays" title="Link to this definition"></a></dt>
+<dd><p>Helper for eip1186:3:loba</p>
+<p>The list of proofs in storage proof proves the presence of a <em>list</em> of byte
+arrays. The metadata contains a slot count for
+<em>each</em> byte array.</p>
+<p>For example</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">metadata</span><span class="p">:</span> <span class="p">{</span>
+    <span class="n">slots</span><span class="p">:</span> <span class="p">[</span><span class="mi">3</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">5</span><span class="p">],</span>
+    <span class="n">lenlasts</span><span class="p">:</span> <span class="p">[</span><span class="mi">28</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">32</span><span class="p">]</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>Describes 3 distinct byte arrays. The first consumes the values for the
+first 3 proofs, the second proof values 3 &amp; 4, and the last takes the
+remaining 5 proof values.</p>
+<p>The last slot of each respective array has 28 bytes, 3 bytes and finally
+exactly  32 bytes</p>
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="datatrails_receipt_scitt.elementmetadata.FieldValues">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">datatrails_receipt_scitt.elementmetadata.</span></span><span class="sig-name descname"><span class="pre">FieldValues</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">storageproofs</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">list</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">metadata</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">dict</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/datatrails_receipt_scitt/elementmetadata.html#FieldValues"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#datatrails_receipt_scitt.elementmetadata.FieldValues" title="Link to this definition"></a></dt>
+<dd><p>Helper for eip1186:2:fv</p>
+<p>The list of proofs in storage proof proves the presence of an array of
+storage slots backing a solidity ABI structure. The metadata defines the
+variable field structure in those slots (but does not currently contain
+the original type info)</p>
+<p>For example:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">metadata</span><span class="p">:</span> <span class="p">{</span>
+    <span class="n">fields</span><span class="p">:</span> <span class="p">[</span>
+        <span class="p">{</span> <span class="s2">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;foo&quot;</span><span class="p">,</span> <span class="s2">&quot;slot&quot;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span> <span class="s2">&quot;offset&quot;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span> <span class="s2">&quot;size&quot;</span><span class="p">:</span> <span class="mi">2</span><span class="p">},</span>
+        <span class="p">{</span> <span class="s2">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;bar&quot;</span><span class="p">,</span> <span class="s2">&quot;slot&quot;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span> <span class="s2">&quot;offset&quot;</span><span class="p">:</span> <span class="mi">2</span><span class="p">,</span> <span class="s2">&quot;size&quot;</span><span class="p">:</span> <span class="mi">4</span><span class="p">},</span>
+        <span class="p">{</span> <span class="s2">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;baz&quot;</span><span class="p">,</span> <span class="s2">&quot;slot&quot;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span> <span class="s2">&quot;offset&quot;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span> <span class="s2">&quot;size&quot;</span><span class="p">:</span> <span class="mi">32</span><span class="p">}</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>Defines the variables foo, bar and baz. foo and bar are packed into the
+first slot. Due to occupying a full 32 byte slot, baz.</p>
+<p class="rubric">Notes</p>
+<p>a) In the current DataTrails usage fields occupied by nested slots are
+typically omitted and dealt with as a special case (who &amp; when). We
+may in future allow size to be a multiple of 32 to allow for inline
+nested structs.</p>
+<p>b) the offset is from the low register address, which frustratingly
+is at the right end of the word. Eg the offsets should actually be
+visualized like this. (We intend to change the backend to make this
+more intuitive)</p>
+<blockquote>
+<div><p><cite>|31|30 … 2|1|0|</cite></p>
+</div></blockquote>
+<p>c) we plan to add the original solidity type names in a future
+backend release.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="datatrails_receipt_scitt.elementmetadata.FieldValues.fields">
+<span class="sig-name descname"><span class="pre">fields</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/datatrails_receipt_scitt/elementmetadata.html#FieldValues.fields"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#datatrails_receipt_scitt.elementmetadata.FieldValues.fields" title="Link to this definition"></a></dt>
+<dd><p>return the list of field names</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="datatrails_receipt_scitt.elementmetadata.FieldValues.value">
+<span class="sig-name descname"><span class="pre">value</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/datatrails_receipt_scitt/elementmetadata.html#FieldValues.value"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#datatrails_receipt_scitt.elementmetadata.FieldValues.value" title="Link to this definition"></a></dt>
+<dd><p>return the value of the field</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py exception">
+<dt class="sig sig-object py" id="datatrails_receipt_scitt.elementmetadata.MetadataError">
+<em class="property"><span class="pre">exception</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">datatrails_receipt_scitt.elementmetadata.</span></span><span class="sig-name descname"><span class="pre">MetadataError</span></span><a class="reference internal" href="_modules/datatrails_receipt_scitt/elementmetadata.html#MetadataError"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#datatrails_receipt_scitt.elementmetadata.MetadataError" title="Link to this definition"></a></dt>
+<dd><p>Raised when there is an unexpected formatting or content issue with the metadata.</p>
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="datatrails_receipt_scitt.elementmetadata.SlotArray">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">datatrails_receipt_scitt.elementmetadata.</span></span><span class="sig-name descname"><span class="pre">SlotArray</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">storageproofs</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">list</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">lenlast</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/datatrails_receipt_scitt/elementmetadata.html#SlotArray"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#datatrails_receipt_scitt.elementmetadata.SlotArray" title="Link to this definition"></a></dt>
+<dd><p>Helper for eip1186:1:sa</p>
+<p>After construction the concatenation of all slot values is available on .value
+The individual slot values are available in .values</p>
+<p>No extra metadata is required for this type. However, if the number of
+significant bytes for the last slot is known it can be supplied via the
+<cite>lenlast</cite> constructor param. This does not impact the proof, that is for the
+full slot contents regardless of storage layout within that slot.</p>
+<dl class="simple">
+<dt>This accommodates:</dt><dd><ul class="simple">
+<li><p>a storage proof for a solidity dynamic array of bytes (string or bytes)</p></li>
+<li><p>a storage proof for a struct whose fields are all uint256</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<p id="module-datatrails_receipt_scitt.ethproofs"># code based on example found:
+# <a class="reference external" href="https://web3py.readthedocs.io/en/v5/web3.eth.html">https://web3py.readthedocs.io/en/v5/web3.eth.html</a></p>
+<p># for imports we need to do the following pip installs:
+#   trie</p>
+<dl class="py exception">
+<dt class="sig sig-object py" id="datatrails_receipt_scitt.ethproofs.VerifyFailed">
+<em class="property"><span class="pre">exception</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">datatrails_receipt_scitt.ethproofs.</span></span><span class="sig-name descname"><span class="pre">VerifyFailed</span></span><a class="reference internal" href="_modules/datatrails_receipt_scitt/ethproofs.html#VerifyFailed"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#datatrails_receipt_scitt.ethproofs.VerifyFailed" title="Link to this definition"></a></dt>
+<dd><p>raised if a proof verification operation fails</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="datatrails_receipt_scitt.ethproofs.verify_eth_account_proof">
+<span class="sig-prename descclassname"><span class="pre">datatrails_receipt_scitt.ethproofs.</span></span><span class="sig-name descname"><span class="pre">verify_eth_account_proof</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">account</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ethproof</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">dict</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">root</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">HexBytes</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/datatrails_receipt_scitt/ethproofs.html#verify_eth_account_proof"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#datatrails_receipt_scitt.ethproofs.verify_eth_account_proof" title="Link to this definition"></a></dt>
+<dd><p>verifies the given account proof with the given root</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>proof</strong> (<em>dict</em>) – the merkle proof as per the response
+from <cite>eth_getProof</cite></p></li>
+<li><p><strong>root</strong> (<em>HexBytes</em>) – the state root of the block to verify the
+account proof against</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="datatrails_receipt_scitt.ethproofs.verify_eth_storage_proof">
+<span class="sig-prename descclassname"><span class="pre">datatrails_receipt_scitt.ethproofs.</span></span><span class="sig-name descname"><span class="pre">verify_eth_storage_proof</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ethproof</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/datatrails_receipt_scitt/ethproofs.html#verify_eth_storage_proof"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#datatrails_receipt_scitt.ethproofs.verify_eth_storage_proof" title="Link to this definition"></a></dt>
+<dd><p>verifies the given account proof with the given root</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>ethproof</strong> – the merkle proof as per the
+response from <cite>eth_getProof</cite></p>
+</dd>
+</dl>
+</dd></dl>
+
+<p id="module-datatrails_receipt_scitt.exceptions">Module for execptions for datatrails receipt scitt</p>
+<dl class="py exception">
+<dt class="sig sig-object py" id="datatrails_receipt_scitt.exceptions.InvalidAttributeType">
+<em class="property"><span class="pre">exception</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">datatrails_receipt_scitt.exceptions.</span></span><span class="sig-name descname"><span class="pre">InvalidAttributeType</span></span><a class="reference internal" href="_modules/datatrails_receipt_scitt/exceptions.html#InvalidAttributeType"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#datatrails_receipt_scitt.exceptions.InvalidAttributeType" title="Link to this definition"></a></dt>
+<dd><p>Raised when the attribute type, of an attribute is not an accepted type</p>
+</dd></dl>
+
+<p id="module-datatrails_receipt_scitt.khipureceipt">DataTrails Khipu event specifics</p>
+<dl class="py class">
+<dt class="sig sig-object py" id="datatrails_receipt_scitt.khipureceipt.KhipuReceipt">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">datatrails_receipt_scitt.khipureceipt.</span></span><span class="sig-name descname"><span class="pre">KhipuReceipt</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">contents</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">serviceparams</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/datatrails_receipt_scitt/khipureceipt.html#KhipuReceipt"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#datatrails_receipt_scitt.khipureceipt.KhipuReceipt" title="Link to this definition"></a></dt>
+<dd><p>This class adds khipu specific receipt handling. See <code class="xref py py-class docutils literal notranslate"><span class="pre">Receipt</span></code> for a general description.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="datatrails_receipt_scitt.khipureceipt.KhipuReceipt.decode">
+<span class="sig-name descname"><span class="pre">decode</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/datatrails_receipt_scitt/khipureceipt.html#KhipuReceipt.decode"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#datatrails_receipt_scitt.khipureceipt.KhipuReceipt.decode" title="Link to this definition"></a></dt>
+<dd><p>decode the application values from the proof</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="datatrails_receipt_scitt.khipureceipt.KhipuReceipt.verify">
+<span class="sig-name descname"><span class="pre">verify</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">worldroot</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/datatrails_receipt_scitt/khipureceipt.html#KhipuReceipt.verify"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#datatrails_receipt_scitt.khipureceipt.KhipuReceipt.verify" title="Link to this definition"></a></dt>
+<dd><p>Verify the named proofs</p>
+<ul class="simple">
+<li><p>If the worldroot is supplied, the presence of the contract storage account is verified</p></li>
+</ul>
+<p>If no parameters are supplied this method simple verifies the storage
+proofs are consistent with the storage roots in the proof itself.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>worldroot</strong> – ethereum world state root from the block header</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py exception">
+<dt class="sig sig-object py" id="datatrails_receipt_scitt.khipureceipt.KhipuReceiptMalformedAttributes">
+<em class="property"><span class="pre">exception</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">datatrails_receipt_scitt.khipureceipt.</span></span><span class="sig-name descname"><span class="pre">KhipuReceiptMalformedAttributes</span></span><a class="reference internal" href="_modules/datatrails_receipt_scitt/khipureceipt.html#KhipuReceiptMalformedAttributes"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#datatrails_receipt_scitt.khipureceipt.KhipuReceiptMalformedAttributes" title="Link to this definition"></a></dt>
+<dd><p>The receipt encoding of the datatrails attributes is malformed</p>
+</dd></dl>
+
+<p id="module-datatrails_receipt_scitt.receiptdecoder">Support decoding of the receipt response from the DataTrails /v1/notary/receipts end point</p>
+<p>The format of the receipt follows this <em>draft</em> standard <a class="reference external" href="https://datatracker.ietf.org/doc/draft-birkholz-scitt-receipts/">draft-birkholz-scitt-receipts-02</a></p>
+<p><a class="reference external" href="https://datatracker.ietf.org/doc/draft-birkholz-scitt-receipts/">draft-birkholz-scitt-receipts-02</a> [3. Generic Receipt Structure]:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="p">[</span> <span class="n">protected</span><span class="p">,</span> <span class="n">contents</span> <span class="p">]</span>
+</pre></div>
+</div>
+<p>We define the DataTrails tree algorithm ‘EIP1186NamedSlotProofs’ based on <a class="reference external" href="https://eips.ethereum.org/EIPS/eip-1186">EIP1186</a> formatted merkle proofs</p>
+<p>The protected field is dictated by the standard. The contents field is define by EIP1186NamedSlotProofs</p>
+<dl class="py function">
+<dt class="sig sig-object py" id="datatrails_receipt_scitt.receiptdecoder.receipt_trie_alg_contents">
+<span class="sig-prename descclassname"><span class="pre">datatrails_receipt_scitt.receiptdecoder.</span></span><span class="sig-name descname"><span class="pre">receipt_trie_alg_contents</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">receipt</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bytes</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">dict</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">bool</span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="_modules/datatrails_receipt_scitt/receiptdecoder.html#receipt_trie_alg_contents"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#datatrails_receipt_scitt.receiptdecoder.receipt_trie_alg_contents" title="Link to this definition"></a></dt>
+<dd><p>decode the protected header, the signature and the tree-alg contents from the receipt.</p>
+<p>The semantics of the contents are defined by the EIP1186NamedSlotProofs tree
+alg.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>receipt</strong> (<em>str</em>) – base64 encoded CBOR, or CBOR Cose Sign1 receipt value obtained from the receipts api</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>a tuple of proof and whether the proof is public or permissioned</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="datatrails_receipt_scitt.receiptdecoder.receipt_verify_envelope">
+<span class="sig-prename descclassname"><span class="pre">datatrails_receipt_scitt.receiptdecoder.</span></span><span class="sig-name descname"><span class="pre">receipt_verify_envelope</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">key</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sign_protected</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bytes</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">contents</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bytes</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">signature</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bytes</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/datatrails_receipt_scitt/receiptdecoder.html#receipt_verify_envelope"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#datatrails_receipt_scitt.receiptdecoder.receipt_verify_envelope" title="Link to this definition"></a></dt>
+<dd><p>Verify the signature and protected header for the partially decoded receipt</p>
+<p>See unittests/wellknownkey.py for why this is only by way of example and not required.</p>
+<p>This does _NOT_ verify the contents according to the trie alg, simply that
+the contents, treated as an opaque blob, have been signed by the trusted
+service, along with the protected headers.</p>
+<p>There are currently no unprotected headers defined</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>sign_protected</strong> (<em>bytes</em>) – protected headers identifying the service and the</p>
+</dd>
+</dl>
+<p>trie alg, decoded from the receipt.
+:param bytes signature: trust services signature over the protected header and the content</p>
+</dd></dl>
+
+<p id="module-datatrails_receipt_scitt.trie_alg">Constants and utilities intrinsic to the EIP1186NamedProofs trie alg</p>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="index.html" class="btn btn-neutral float-left" title="DataTrails Scitt Receipt Verification in python" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2023, support@datatrails.ai.</p>
+  </div>
+
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+    <!-- Theme Analytics -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-7K46H3KK7N"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+
+      gtag('config', 'G-7K46H3KK7N', {
+          'anonymize_ip': false,
+      });
+    </script> 
+
+</body>
+</html>

@@ -1,0 +1,278 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>datatrails_receipt_scitt.khipureceipt &mdash; DataTrails 0.0.1a documentation</title>
+      <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+      <link rel="stylesheet" href="../../_static/sg_gallery.css" type="text/css" />
+      <link rel="stylesheet" href="../../_static/css/datatrails_theme.css" type="text/css" />
+    <link rel="shortcut icon" href="../../_static/favicon.ico"/>
+  <!--[if lt IE 9]>
+    <script src="../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script src="../../_static/jquery.js?v=5d32c60e"></script>
+        <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+        <script src="../../_static/documentation_options.js?v=8c8a9e14"></script>
+        <script src="../../_static/doctools.js?v=888ff710"></script>
+        <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../index.html">
+            
+              <img src="../../_static/DataTrails_WhtLogo_RGB.png" class="logo" alt="Logo"/>
+          </a>
+              <div class="version">
+                0.0.1a
+              </div>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Scitt Receipt Verification</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../api.html">API</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">DataTrails</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../index.html">Module code</a></li>
+      <li class="breadcrumb-item active">datatrails_receipt_scitt.khipureceipt</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for datatrails_receipt_scitt.khipureceipt</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">DataTrails Khipu event specifics</span>
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="kn">from</span> <span class="nn">eth_utils</span> <span class="kn">import</span> <span class="n">to_checksum_address</span>
+
+<span class="kn">from</span> <span class="nn">.</span> <span class="kn">import</span> <span class="n">trie_alg</span>
+<span class="kn">from</span> <span class="nn">.attribute_decoder</span> <span class="kn">import</span> <span class="p">(</span>
+    <span class="n">decode_attribute_key</span><span class="p">,</span>
+    <span class="n">decode_attribute_value</span><span class="p">,</span>
+    <span class="n">AttributeType</span><span class="p">,</span>
+<span class="p">)</span>
+
+<span class="kn">from</span> <span class="nn">.receipt</span> <span class="kn">import</span> <span class="n">bto3339</span><span class="p">,</span> <span class="n">u256touuid</span><span class="p">,</span> <span class="n">Receipt</span>
+
+
+<div class="viewcode-block" id="KhipuReceiptMalformedAttributes">
+<a class="viewcode-back" href="../../api.html#datatrails_receipt_scitt.khipureceipt.KhipuReceiptMalformedAttributes">[docs]</a>
+<span class="k">class</span> <span class="nc">KhipuReceiptMalformedAttributes</span><span class="p">(</span><span class="ne">ValueError</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    The receipt encoding of the datatrails attributes is malformed</span>
+<span class="sd">    &quot;&quot;&quot;</span></div>
+
+
+
+<span class="n">EXTRA_PARAMETERS</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;monotonic_version&quot;</span><span class="p">]</span>
+<span class="n">APPLICATION_PARAMETERS</span> <span class="o">=</span> <span class="n">trie_alg</span><span class="o">.</span><span class="n">APPLICATION_PARAMETERS</span> <span class="o">+</span> <span class="n">EXTRA_PARAMETERS</span>
+<span class="n">MANIFEST_ELEMENTS</span> <span class="o">=</span> <span class="s2">&quot;who_declared who_accepted essentials attribute_kindnames attribute_values when&quot;</span><span class="o">.</span><span class="n">split</span><span class="p">()</span>
+
+<span class="n">ATTRIBUTE_KINDNAMES</span> <span class="o">=</span> <span class="s2">&quot;attribute_kindnames&quot;</span>
+<span class="n">ATTRIBUTE_VALUES</span> <span class="o">=</span> <span class="s2">&quot;attribute_values&quot;</span>
+<span class="n">ESSENTIALS</span> <span class="o">=</span> <span class="s2">&quot;essentials&quot;</span>
+<span class="n">ESSENTIALS_CREATOR</span> <span class="o">=</span> <span class="s2">&quot;creator&quot;</span>
+<span class="n">ESSENTIALS_KHIPUIDENTITY</span> <span class="o">=</span> <span class="s2">&quot;khipuIdentity&quot;</span>
+<span class="n">ESSENTIALS_ASSETIDENTITY</span> <span class="o">=</span> <span class="s2">&quot;assetIdentity&quot;</span>
+
+<span class="n">WHO_ISSUER</span> <span class="o">=</span> <span class="mi">0</span>
+<span class="n">WHO_SUBJECT</span> <span class="o">=</span> <span class="mi">1</span>
+<span class="n">WHO_DISPLAY_NAME</span> <span class="o">=</span> <span class="mi">2</span>
+<span class="n">WHO_EMAIL</span> <span class="o">=</span> <span class="mi">3</span>
+
+<span class="n">WHEN_DECLARED</span> <span class="o">=</span> <span class="mi">0</span>
+<span class="n">WHEN_ACCEPTED</span> <span class="o">=</span> <span class="mi">1</span>
+<span class="n">WHEN_COMMITTED</span> <span class="o">=</span> <span class="mi">2</span>
+
+
+<span class="k">def</span> <span class="nf">_principal_from_rawstorage</span><span class="p">(</span><span class="n">rawstorage</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    :param rawstorage: the 4 element list of strings representing a principal</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="p">{</span>
+        <span class="s2">&quot;issuer&quot;</span><span class="p">:</span> <span class="n">rawstorage</span><span class="p">[</span><span class="n">WHO_ISSUER</span><span class="p">]</span><span class="o">.</span><span class="n">decode</span><span class="p">(</span><span class="s2">&quot;utf-8&quot;</span><span class="p">),</span>
+        <span class="s2">&quot;subject&quot;</span><span class="p">:</span> <span class="n">rawstorage</span><span class="p">[</span><span class="n">WHO_SUBJECT</span><span class="p">]</span><span class="o">.</span><span class="n">decode</span><span class="p">(</span><span class="s2">&quot;utf-8&quot;</span><span class="p">),</span>
+        <span class="s2">&quot;display_name&quot;</span><span class="p">:</span> <span class="n">rawstorage</span><span class="p">[</span><span class="n">WHO_DISPLAY_NAME</span><span class="p">]</span><span class="o">.</span><span class="n">decode</span><span class="p">(</span><span class="s2">&quot;utf-8&quot;</span><span class="p">),</span>
+        <span class="s2">&quot;email&quot;</span><span class="p">:</span> <span class="n">rawstorage</span><span class="p">[</span><span class="n">WHO_EMAIL</span><span class="p">]</span><span class="o">.</span><span class="n">decode</span><span class="p">(</span><span class="s2">&quot;utf-8&quot;</span><span class="p">),</span>
+    <span class="p">}</span>
+
+
+<span class="k">def</span> <span class="nf">_whens_from_rawstorage</span><span class="p">(</span><span class="n">rawstorage</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    :param rawstorage: the 3 element list of slot values from the &#39;when&#39; proof</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># datatrails_simplehash.V1_FIELDS (in v1.py) defines constants for these dict</span>
+    <span class="c1"># keys these in alignment with the public datatrails events api</span>
+    <span class="k">return</span> <span class="p">{</span>
+        <span class="s2">&quot;timestamp_declared&quot;</span><span class="p">:</span> <span class="n">bto3339</span><span class="p">(</span><span class="n">rawstorage</span><span class="p">[</span><span class="n">WHEN_DECLARED</span><span class="p">]),</span>
+        <span class="s2">&quot;timestamp_accepted&quot;</span><span class="p">:</span> <span class="n">bto3339</span><span class="p">(</span><span class="n">rawstorage</span><span class="p">[</span><span class="n">WHEN_ACCEPTED</span><span class="p">]),</span>
+        <span class="c1"># scale down by 1000,000,000. raft block time stamps are in nanoseconds</span>
+        <span class="c1"># and we need seconds to do the RFC 3339 conversion</span>
+        <span class="s2">&quot;timestamp_committed&quot;</span><span class="p">:</span> <span class="n">bto3339</span><span class="p">(</span><span class="n">rawstorage</span><span class="p">[</span><span class="n">WHEN_COMMITTED</span><span class="p">],</span> <span class="n">scale</span><span class="o">=</span><span class="mi">1000000000</span><span class="p">),</span>
+    <span class="p">}</span>
+
+
+<div class="viewcode-block" id="KhipuReceipt">
+<a class="viewcode-back" href="../../api.html#datatrails_receipt_scitt.khipureceipt.KhipuReceipt">[docs]</a>
+<span class="k">class</span> <span class="nc">KhipuReceipt</span><span class="p">(</span><span class="n">Receipt</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    This class adds khipu specific receipt handling. See :class:`Receipt` for a general description.</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+
+<div class="viewcode-block" id="KhipuReceipt.verify">
+<a class="viewcode-back" href="../../api.html#datatrails_receipt_scitt.khipureceipt.KhipuReceipt.verify">[docs]</a>
+    <span class="k">def</span> <span class="nf">verify</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">worldroot</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Verify the named proofs</span>
+
+<span class="sd">        * If the worldroot is supplied, the presence of the contract storage account is verified</span>
+
+<span class="sd">        If no parameters are supplied this method simple verifies the storage</span>
+<span class="sd">        proofs are consistent with the storage roots in the proof itself.</span>
+
+<span class="sd">        :param worldroot: ethereum world state root from the block header</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">verify</span><span class="p">(</span><span class="n">MANIFEST_ELEMENTS</span><span class="p">,</span> <span class="n">worldroot</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="KhipuReceipt.decode">
+<a class="viewcode-back" href="../../api.html#datatrails_receipt_scitt.khipureceipt.KhipuReceipt.decode">[docs]</a>
+    <span class="k">def</span> <span class="nf">decode</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;decode the application values from the proof&quot;&quot;&quot;</span>
+
+        <span class="c1"># ensure we have the proofs from the contents collected</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">namedproofs</span><span class="o">.</span><span class="n">proofs</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">namedproofs</span><span class="o">.</span><span class="n">collect_proofs</span><span class="p">(</span><span class="o">*</span><span class="n">MANIFEST_ELEMENTS</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">namedproofs</span><span class="o">.</span><span class="n">decode</span><span class="p">()</span>
+
+        <span class="c1"># Now use DataTrails API assumptions to rebuild the event and asset attributes map</span>
+
+        <span class="n">kindnames</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">namedproofs</span><span class="o">.</span><span class="n">decoded</span><span class="p">(</span><span class="n">ATTRIBUTE_KINDNAMES</span><span class="p">)</span><span class="o">.</span><span class="n">arrays</span>
+        <span class="n">values</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">namedproofs</span><span class="o">.</span><span class="n">decoded</span><span class="p">(</span><span class="n">ATTRIBUTE_VALUES</span><span class="p">)</span><span class="o">.</span><span class="n">arrays</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">kindnames</span><span class="p">)</span> <span class="o">!=</span> <span class="nb">len</span><span class="p">(</span><span class="n">values</span><span class="p">):</span>
+            <span class="k">raise</span> <span class="n">KhipuReceiptMalformedAttributes</span><span class="p">(</span>
+                <span class="s2">&quot;number of names inconsistent with number of values&quot;</span>
+            <span class="p">)</span>
+
+        <span class="n">assetattributes</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="n">eventattributes</span> <span class="o">=</span> <span class="p">{}</span>
+
+        <span class="k">for</span> <span class="n">kindname</span><span class="p">,</span> <span class="n">rlpvalue</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">kindnames</span><span class="p">,</span> <span class="n">values</span><span class="p">):</span>
+            <span class="n">kind</span><span class="p">,</span> <span class="n">name</span> <span class="o">=</span> <span class="n">decode_attribute_key</span><span class="p">(</span><span class="n">kindname</span><span class="p">)</span>
+
+            <span class="n">value</span> <span class="o">=</span> <span class="n">decode_attribute_value</span><span class="p">(</span><span class="n">rlpvalue</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">kind</span> <span class="o">==</span> <span class="n">AttributeType</span><span class="o">.</span><span class="n">ASSET</span><span class="p">:</span>
+                <span class="n">assetattributes</span><span class="p">[</span><span class="n">name</span><span class="p">]</span> <span class="o">=</span> <span class="n">value</span>
+            <span class="k">elif</span> <span class="n">kind</span> <span class="o">==</span> <span class="n">AttributeType</span><span class="o">.</span><span class="n">EVENT</span><span class="p">:</span>
+                <span class="n">eventattributes</span><span class="p">[</span><span class="n">name</span><span class="p">]</span> <span class="o">=</span> <span class="n">value</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="n">KhipuReceiptMalformedAttributes</span><span class="p">(</span>
+                    <span class="sa">f</span><span class="s2">&quot;unsupported kind &#39;</span><span class="si">{</span><span class="n">kind</span><span class="si">}</span><span class="s2">&#39; for attribute &#39;</span><span class="si">{</span><span class="n">name</span><span class="si">}</span><span class="s2">&#39;&quot;</span>
+                <span class="p">)</span>
+
+            <span class="c1"># Note we don&#39;t currently include the aggregate sharing policy</span>
+            <span class="c1"># attributes in the receipt. We may do in future.</span>
+
+        <span class="n">essentials</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">namedproofs</span><span class="o">.</span><span class="n">decoded</span><span class="p">(</span><span class="n">ESSENTIALS</span><span class="p">)</span>
+        <span class="n">creator</span> <span class="o">=</span> <span class="n">to_checksum_address</span><span class="p">(</span>
+            <span class="n">essentials</span><span class="o">.</span><span class="n">value</span><span class="p">(</span><span class="n">ESSENTIALS_CREATOR</span><span class="p">)</span>
+        <span class="p">)</span>  <span class="c1"># aka from address</span>
+        <span class="n">eventUUID</span> <span class="o">=</span> <span class="n">u256touuid</span><span class="p">(</span><span class="n">essentials</span><span class="o">.</span><span class="n">value</span><span class="p">(</span><span class="n">ESSENTIALS_KHIPUIDENTITY</span><span class="p">))</span>
+        <span class="n">assetUUID</span> <span class="o">=</span> <span class="n">u256touuid</span><span class="p">(</span><span class="n">essentials</span><span class="o">.</span><span class="n">value</span><span class="p">(</span><span class="n">ESSENTIALS_ASSETIDENTITY</span><span class="p">))</span>
+
+        <span class="c1"># TODO: missing the khipu schema version number &#39;monotonicversion&#39;</span>
+        <span class="n">who_declared</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">namedproofs</span><span class="o">.</span><span class="n">decoded</span><span class="p">(</span><span class="s2">&quot;who_declared&quot;</span><span class="p">)</span>
+        <span class="n">who_accepted</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">namedproofs</span><span class="o">.</span><span class="n">decoded</span><span class="p">(</span><span class="s2">&quot;who_accepted&quot;</span><span class="p">)</span>
+        <span class="n">whens</span> <span class="o">=</span> <span class="n">_whens_from_rawstorage</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">namedproofs</span><span class="o">.</span><span class="n">decoded</span><span class="p">(</span><span class="s2">&quot;when&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">values</span><span class="p">)</span>
+
+        <span class="c1"># Note: this dict is aligned with the constants and event structure we</span>
+        <span class="c1"># work with in the datatrails-simplehash-python package.  see</span>
+        <span class="c1"># datatrails_simplehash.V1_FIELDS (in v1.py)</span>
+        <span class="n">event</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="s2">&quot;identity&quot;</span><span class="p">:</span> <span class="sa">f</span><span class="s2">&quot;assets/</span><span class="si">{</span><span class="n">assetUUID</span><span class="si">}</span><span class="s2">/events/</span><span class="si">{</span><span class="n">eventUUID</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;asset_identity&quot;</span><span class="p">:</span> <span class="sa">f</span><span class="s2">&quot;assets/</span><span class="si">{</span><span class="n">assetUUID</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;from&quot;</span><span class="p">:</span> <span class="n">creator</span><span class="p">,</span>
+            <span class="s2">&quot;principal_declared&quot;</span><span class="p">:</span> <span class="n">_principal_from_rawstorage</span><span class="p">(</span><span class="n">who_declared</span><span class="o">.</span><span class="n">arrays</span><span class="p">),</span>
+            <span class="s2">&quot;principal_accepted&quot;</span><span class="p">:</span> <span class="n">_principal_from_rawstorage</span><span class="p">(</span><span class="n">who_accepted</span><span class="o">.</span><span class="n">arrays</span><span class="p">),</span>
+            <span class="s2">&quot;asset_attributes&quot;</span><span class="p">:</span> <span class="n">assetattributes</span><span class="p">,</span>
+            <span class="s2">&quot;event_attributes&quot;</span><span class="p">:</span> <span class="n">eventattributes</span><span class="p">,</span>
+        <span class="p">}</span>
+        <span class="n">event</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">whens</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">event</span></div>
+</div>
+
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2023, support@datatrails.ai.</p>
+  </div>
+
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+    <!-- Theme Analytics -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-7K46H3KK7N"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+
+      gtag('config', 'G-7K46H3KK7N', {
+          'anonymize_ip': false,
+      });
+    </script> 
+
+</body>
+</html>

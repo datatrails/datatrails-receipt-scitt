@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>datatrails_receipt_scitt.receiptdecoder &mdash; DataTrails 0.0.1a documentation</title>
+      <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+      <link rel="stylesheet" href="../../_static/sg_gallery.css" type="text/css" />
+      <link rel="stylesheet" href="../../_static/css/datatrails_theme.css" type="text/css" />
+    <link rel="shortcut icon" href="../../_static/favicon.ico"/>
+  <!--[if lt IE 9]>
+    <script src="../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script src="../../_static/jquery.js?v=5d32c60e"></script>
+        <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+        <script src="../../_static/documentation_options.js?v=8c8a9e14"></script>
+        <script src="../../_static/doctools.js?v=888ff710"></script>
+        <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../index.html">
+            
+              <img src="../../_static/DataTrails_WhtLogo_RGB.png" class="logo" alt="Logo"/>
+          </a>
+              <div class="version">
+                0.0.1a
+              </div>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Scitt Receipt Verification</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../api.html">API</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">DataTrails</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../index.html">Module code</a></li>
+      <li class="breadcrumb-item active">datatrails_receipt_scitt.receiptdecoder</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for datatrails_receipt_scitt.receiptdecoder</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot;Support decoding of the receipt response from the DataTrails /v1/notary/receipts end point</span>
+
+<span class="sd">The format of the receipt follows this *draft* standard draft-birkholz-scitt-receipts-02_</span>
+
+<span class="sd">draft-birkholz-scitt-receipts-02_ [3. Generic Receipt Structure]::</span>
+
+<span class="sd">    [ protected, contents ]</span>
+
+<span class="sd">We define the DataTrails tree algorithm &#39;EIP1186NamedSlotProofs&#39; based on EIP1186_ formatted merkle proofs</span>
+
+<span class="sd">The protected field is dictated by the standard. The contents field is define by EIP1186NamedSlotProofs</span>
+
+
+<span class="sd">.. _draft-birkholz-scitt-receipts-02: https://datatracker.ietf.org/doc/draft-birkholz-scitt-receipts/</span>
+
+<span class="sd">.. _EIP1186: https://eips.ethereum.org/EIPS/eip-1186</span>
+
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="c1"># [receipts-02]:</span>
+<span class="c1"># TODO: check format of docstrings is compatible with sphynx. need ci support adding to check this</span>
+<span class="kn">import</span> <span class="nn">base64</span>
+<span class="kn">import</span> <span class="nn">json</span>
+<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Tuple</span>
+<span class="kn">import</span> <span class="nn">cbor2.decoder</span>
+<span class="kn">from</span> <span class="nn">pycose.messages.sign1message</span> <span class="kn">import</span> <span class="n">Sign1Message</span>
+
+
+<div class="viewcode-block" id="receipt_trie_alg_contents">
+<a class="viewcode-back" href="../../api.html#datatrails_receipt_scitt.receiptdecoder.receipt_trie_alg_contents">[docs]</a>
+<span class="k">def</span> <span class="nf">receipt_trie_alg_contents</span><span class="p">(</span><span class="n">receipt</span><span class="p">:</span> <span class="nb">bytes</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="nb">dict</span><span class="p">,</span> <span class="nb">bool</span><span class="p">]:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;decode the protected header, the signature and the tree-alg contents from the receipt.</span>
+
+<span class="sd">    The semantics of the contents are defined by the EIP1186NamedSlotProofs tree</span>
+<span class="sd">    alg.</span>
+
+<span class="sd">    :param str receipt: base64 encoded CBOR, or CBOR Cose Sign1 receipt value obtained from the receipts api</span>
+
+<span class="sd">    :return: a tuple of proof and whether the proof is public or permissioned</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="c1"># first attempt to decode into pycose cose sign1</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">decoded_msg</span> <span class="o">=</span> <span class="n">Sign1Message</span><span class="o">.</span><span class="n">decode</span><span class="p">(</span><span class="n">receipt</span><span class="p">)</span>
+
+        <span class="n">payload</span> <span class="o">=</span> <span class="n">decoded_msg</span><span class="o">.</span><span class="n">payload</span>
+
+        <span class="c1"># NOTE: this is a stop gap while we only have public scitt receipts</span>
+        <span class="c1">#       when we support permissioned scitt receipts as well, we need to</span>
+        <span class="c1">#       find a different solution.</span>
+        <span class="n">public</span> <span class="o">=</span> <span class="kc">True</span>
+
+    <span class="k">except</span> <span class="ne">AttributeError</span><span class="p">:</span>
+        <span class="c1"># if we can&#39;t decode the message into the pycose cose sign1,</span>
+        <span class="c1">#   attempt to decode it into our notary representation</span>
+        <span class="n">cbor_msg</span> <span class="o">=</span> <span class="n">base64</span><span class="o">.</span><span class="n">standard_b64decode</span><span class="p">(</span><span class="n">receipt</span><span class="p">)</span>
+
+        <span class="n">decoded_msg</span> <span class="o">=</span> <span class="n">cbor2</span><span class="o">.</span><span class="n">decoder</span><span class="o">.</span><span class="n">loads</span><span class="p">(</span><span class="n">cbor_msg</span><span class="p">)</span>
+
+        <span class="c1"># the notary receipt is in the form: [sign_protected, [signature, payload]]</span>
+        <span class="n">payload</span> <span class="o">=</span> <span class="n">decoded_msg</span><span class="p">[</span><span class="mi">1</span><span class="p">][</span><span class="mi">1</span><span class="p">]</span>
+        <span class="n">public</span> <span class="o">=</span> <span class="kc">False</span>
+
+    <span class="n">contents</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">loads</span><span class="p">(</span><span class="n">payload</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">contents</span><span class="p">,</span> <span class="n">public</span></div>
+
+
+
+<div class="viewcode-block" id="receipt_verify_envelope">
+<a class="viewcode-back" href="../../api.html#datatrails_receipt_scitt.receiptdecoder.receipt_verify_envelope">[docs]</a>
+<span class="k">def</span> <span class="nf">receipt_verify_envelope</span><span class="p">(</span>
+    <span class="n">key</span><span class="p">,</span> <span class="n">sign_protected</span><span class="p">:</span> <span class="nb">bytes</span><span class="p">,</span> <span class="n">contents</span><span class="p">:</span> <span class="nb">bytes</span><span class="p">,</span> <span class="n">signature</span><span class="p">:</span> <span class="nb">bytes</span>
+<span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Verify the signature and protected header for the partially decoded receipt</span>
+
+<span class="sd">    See unittests/wellknownkey.py for why this is only by way of example and not required.</span>
+
+<span class="sd">    This does _NOT_ verify the contents according to the trie alg, simply that</span>
+<span class="sd">    the contents, treated as an opaque blob, have been signed by the trusted</span>
+<span class="sd">    service, along with the protected headers.</span>
+
+<span class="sd">    There are currently no unprotected headers defined</span>
+
+<span class="sd">    :param bytes sign_protected: protected headers identifying the service and the</span>
+<span class="sd">    trie alg, decoded from the receipt.</span>
+<span class="sd">    :param bytes signature: trust services signature over the protected header and the content</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="c1"># &quot;sign_protected is included in the Receipt contents to enable the Verifier</span>
+    <span class="c1"># to re-construct the Countersign_structure&quot; -- _draft-birkholz-scitt-receipts-02 #4</span>
+    <span class="c1"># sign_protected is [service-id, tree-alg, issued-at]</span>
+
+    <span class="n">phdr</span> <span class="o">=</span> <span class="n">cbor2</span><span class="o">.</span><span class="n">decoder</span><span class="o">.</span><span class="n">loads</span><span class="p">(</span><span class="n">sign_protected</span><span class="p">)</span>
+    <span class="n">msg</span> <span class="o">=</span> <span class="n">Sign1Message</span><span class="p">(</span><span class="n">phdr</span><span class="p">,</span> <span class="kc">None</span><span class="p">,</span> <span class="n">contents</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="n">key</span><span class="p">)</span>
+    <span class="c1"># XXX: TODO: This fails because the backend failed to include the Algorithm header</span>
+    <span class="n">msg</span><span class="o">.</span><span class="n">verify_signature</span><span class="p">(</span><span class="n">signature</span><span class="p">)</span></div>
+
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2023, support@datatrails.ai.</p>
+  </div>
+
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+    <!-- Theme Analytics -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-7K46H3KK7N"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+
+      gtag('config', 'G-7K46H3KK7N', {
+          'anonymize_ip': false,
+      });
+    </script> 
+
+</body>
+</html>

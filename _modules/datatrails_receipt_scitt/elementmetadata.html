@@ -1,0 +1,357 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>datatrails_receipt_scitt.elementmetadata &mdash; DataTrails 0.0.1a documentation</title>
+      <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+      <link rel="stylesheet" href="../../_static/sg_gallery.css" type="text/css" />
+      <link rel="stylesheet" href="../../_static/css/datatrails_theme.css" type="text/css" />
+    <link rel="shortcut icon" href="../../_static/favicon.ico"/>
+  <!--[if lt IE 9]>
+    <script src="../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script src="../../_static/jquery.js?v=5d32c60e"></script>
+        <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+        <script src="../../_static/documentation_options.js?v=8c8a9e14"></script>
+        <script src="../../_static/doctools.js?v=888ff710"></script>
+        <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../index.html">
+            
+              <img src="../../_static/DataTrails_WhtLogo_RGB.png" class="logo" alt="Logo"/>
+          </a>
+              <div class="version">
+                0.0.1a
+              </div>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Scitt Receipt Verification</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../api.html">API</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">DataTrails</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../index.html">Module code</a></li>
+      <li class="breadcrumb-item active">datatrails_receipt_scitt.elementmetadata</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for datatrails_receipt_scitt.elementmetadata</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">The EIP1186NamedProofs trie algorithm defines three proof metadata formats.</span>
+
+<span class="sd">Note that the proofs are always for the raw storage values. Those are proven to</span>
+<span class="sd">be &#39;on-chain&#39; regardless of the metadata. The metadata provides for round</span>
+<span class="sd">tripping between the raw storage values and its application level</span>
+<span class="sd">representation.</span>
+
+<span class="sd">The three formats defined here are intrinsic to this trie algorithm. They are</span>
+<span class="sd">defined to be application neutral. They focus on recovering the proven application</span>
+<span class="sd">values from the receipts without :192</span>
+<span class="sd">recourse to application domain knowledge. Just</span>
+<span class="sd">knowledge of the EVM and the solidity compiler abi.</span>
+
+<span class="sd">Applications (including DataTrails) are free to define new element types but</span>
+<span class="sd">SHOULD only do so if the intrinsics are insufficient.</span>
+
+<span class="sd">In the case of extended types, The app_id and the app_content_ref properties in</span>
+<span class="sd">the application_parameters in the receipt MUST reference the information</span>
+<span class="sd">necessary to interpret the proven values.</span>
+
+<span class="sd">In many cases we would expect the raw proof values to be sufficient from an</span>
+<span class="sd">evidentiary perspective.</span>
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="kn">from</span> <span class="nn">hexbytes</span> <span class="kn">import</span> <span class="n">HexBytes</span>
+
+<span class="n">ELEMENT_ID_SLOTARRAY</span> <span class="o">=</span> <span class="s2">&quot;eip1186sp:1:sa&quot;</span>
+<span class="n">ELEMENT_ID_FIELDVALUES</span> <span class="o">=</span> <span class="s2">&quot;eip1186sp:2:fv&quot;</span>
+<span class="n">ELEMENT_ID_BYTESLIST</span> <span class="o">=</span> <span class="p">(</span>
+    <span class="s2">&quot;eip1186sp:3:loba&quot;</span>  <span class="c1"># TODO change all these suffixes to sensibly literate values</span>
+<span class="p">)</span>
+
+
+<div class="viewcode-block" id="MetadataError">
+<a class="viewcode-back" href="../../api.html#datatrails_receipt_scitt.elementmetadata.MetadataError">[docs]</a>
+<span class="k">class</span> <span class="nc">MetadataError</span><span class="p">(</span><span class="ne">Exception</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Raised when there is an unexpected formatting or content issue with the metadata.</span>
+<span class="sd">    &quot;&quot;&quot;</span></div>
+
+
+
+<span class="c1"># pylint</span>
+
+
+<div class="viewcode-block" id="SlotArray">
+<a class="viewcode-back" href="../../api.html#datatrails_receipt_scitt.elementmetadata.SlotArray">[docs]</a>
+<span class="k">class</span> <span class="nc">SlotArray</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Helper for eip1186:1:sa</span>
+
+<span class="sd">    After construction the concatenation of all slot values is available on .value</span>
+<span class="sd">    The individual slot values are available in .values</span>
+
+<span class="sd">    No extra metadata is required for this type. However, if the number of</span>
+<span class="sd">    significant bytes for the last slot is known it can be supplied via the</span>
+<span class="sd">    `lenlast` constructor param. This does not impact the proof, that is for the</span>
+<span class="sd">    full slot contents regardless of storage layout within that slot.</span>
+
+<span class="sd">    This accommodates:</span>
+<span class="sd">     * a storage proof for a solidity dynamic array of bytes (string or bytes)</span>
+<span class="sd">     * a storage proof for a struct whose fields are all uint256</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">storageproofs</span><span class="p">:</span> <span class="nb">list</span><span class="p">,</span> <span class="n">lenlast</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        The list of proofs in storageproof is treated a list of slots where the</span>
+<span class="sd">        raw values are the application bytes.</span>
+
+
+<span class="sd">        :param storageproof: The storageProofs field from the EIP1186 response,</span>
+<span class="sd">        its a list of merkle proofs</span>
+<span class="sd">        :param lenlast: If the number of bytes stored in the last slot is known</span>
+<span class="sd">        the last slot can be trimmed</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">values</span> <span class="o">=</span> <span class="p">[</span><span class="nb">bytes</span><span class="p">(</span><span class="n">HexBytes</span><span class="p">(</span><span class="n">proof</span><span class="p">[</span><span class="s2">&quot;value&quot;</span><span class="p">]))</span> <span class="k">for</span> <span class="n">proof</span> <span class="ow">in</span> <span class="n">storageproofs</span><span class="p">]</span>
+        <span class="k">if</span> <span class="n">lenlast</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="nb">len</span><span class="p">(</span><span class="n">storageproofs</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">values</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">values</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">][:</span><span class="n">lenlast</span><span class="p">]</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">value</span> <span class="o">=</span> <span class="sa">b</span><span class="s2">&quot;&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">values</span><span class="p">)</span></div>
+
+
+
+<div class="viewcode-block" id="ByteArrays">
+<a class="viewcode-back" href="../../api.html#datatrails_receipt_scitt.elementmetadata.ByteArrays">[docs]</a>
+<span class="k">class</span> <span class="nc">ByteArrays</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Helper for eip1186:3:loba</span>
+
+<span class="sd">    The list of proofs in storage proof proves the presence of a *list* of byte</span>
+<span class="sd">    arrays. The metadata contains a slot count for</span>
+<span class="sd">    *each* byte array.</span>
+
+<span class="sd">    For example</span>
+
+<span class="sd">    .. code-block::</span>
+
+<span class="sd">        metadata: {</span>
+<span class="sd">            slots: [3, 2, 5],</span>
+<span class="sd">            lenlasts: [28, 3, 32]</span>
+<span class="sd">        }</span>
+
+<span class="sd">    Describes 3 distinct byte arrays. The first consumes the values for the</span>
+<span class="sd">    first 3 proofs, the second proof values 3 &amp; 4, and the last takes the</span>
+<span class="sd">    remaining 5 proof values.</span>
+
+<span class="sd">    The last slot of each respective array has 28 bytes, 3 bytes and finally</span>
+<span class="sd">    exactly  32 bytes</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">storageproofs</span><span class="p">:</span> <span class="nb">list</span><span class="p">,</span> <span class="n">metadata</span><span class="p">:</span> <span class="nb">dict</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        :param storageproofs: the list of storage proofs, typically</span>
+<span class="sd">        [&quot;proof&quot;][&quot;storageProof&quot;] from the EIP 1186 response</span>
+<span class="sd">        :param metadata: the metadata for id eip1186:loba describing the layout</span>
+<span class="sd">        of the proven values</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="c1"># The metadata uses associative arrays rather than structured objects as</span>
+        <span class="c1"># it keeps the size of the metadata down. It also makes it more</span>
+        <span class="c1"># composable and open for extension.</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">metadata</span><span class="p">[</span><span class="s2">&quot;slots&quot;</span><span class="p">])</span> <span class="o">!=</span> <span class="nb">len</span><span class="p">(</span><span class="n">metadata</span><span class="p">[</span><span class="s2">&quot;lenlasts&quot;</span><span class="p">]):</span>
+            <span class="k">raise</span> <span class="n">MetadataError</span><span class="p">(</span><span class="s2">&quot;mismatched slots and &#39;length last slot&#39; counts&quot;</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">arrays</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="n">start</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="k">for</span> <span class="n">count</span><span class="p">,</span> <span class="n">lenlast</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">metadata</span><span class="p">[</span><span class="s2">&quot;slots&quot;</span><span class="p">],</span> <span class="n">metadata</span><span class="p">[</span><span class="s2">&quot;lenlasts&quot;</span><span class="p">]):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">arrays</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
+                <span class="n">SlotArray</span><span class="p">(</span><span class="n">storageproofs</span><span class="p">[</span><span class="n">start</span> <span class="p">:</span> <span class="n">start</span> <span class="o">+</span> <span class="n">count</span><span class="p">],</span> <span class="n">lenlast</span><span class="o">=</span><span class="n">lenlast</span><span class="p">)</span><span class="o">.</span><span class="n">value</span>
+            <span class="p">)</span>
+            <span class="n">start</span> <span class="o">+=</span> <span class="n">count</span></div>
+
+
+
+<div class="viewcode-block" id="FieldValues">
+<a class="viewcode-back" href="../../api.html#datatrails_receipt_scitt.elementmetadata.FieldValues">[docs]</a>
+<span class="k">class</span> <span class="nc">FieldValues</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Helper for eip1186:2:fv</span>
+
+<span class="sd">    The list of proofs in storage proof proves the presence of an array of</span>
+<span class="sd">    storage slots backing a solidity ABI structure. The metadata defines the</span>
+<span class="sd">    variable field structure in those slots (but does not currently contain</span>
+<span class="sd">    the original type info)</span>
+
+<span class="sd">    For example:</span>
+
+<span class="sd">    .. code-block::</span>
+
+<span class="sd">        metadata: {</span>
+<span class="sd">            fields: [</span>
+<span class="sd">                { &quot;name&quot;: &quot;foo&quot;, &quot;slot&quot;: 0, &quot;offset&quot;: 0, &quot;size&quot;: 2},</span>
+<span class="sd">                { &quot;name&quot;: &quot;bar&quot;, &quot;slot&quot;: 0, &quot;offset&quot;: 2, &quot;size&quot;: 4},</span>
+<span class="sd">                { &quot;name&quot;: &quot;baz&quot;, &quot;slot&quot;: 1, &quot;offset&quot;: 0, &quot;size&quot;: 32}</span>
+<span class="sd">            }</span>
+<span class="sd">        }</span>
+
+<span class="sd">    Defines the variables foo, bar and baz. foo and bar are packed into the</span>
+<span class="sd">    first slot. Due to occupying a full 32 byte slot, baz.</span>
+
+<span class="sd">    Notes:</span>
+<span class="sd">        a) In the current DataTrails usage fields occupied by nested slots are</span>
+<span class="sd">        typically omitted and dealt with as a special case (who &amp; when). We</span>
+<span class="sd">        may in future allow size to be a multiple of 32 to allow for inline</span>
+<span class="sd">        nested structs.</span>
+
+<span class="sd">        b) the offset is from the low register address, which frustratingly</span>
+<span class="sd">        is at the right end of the word. Eg the offsets should actually be</span>
+<span class="sd">        visualized like this. (We intend to change the backend to make this</span>
+<span class="sd">        more intuitive)</span>
+
+<span class="sd">            `|31|30 ... 2|1|0|`</span>
+
+<span class="sd">        c) we plan to add the original solidity type names in a future</span>
+<span class="sd">        backend release.</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">storageproofs</span><span class="p">:</span> <span class="nb">list</span><span class="p">,</span> <span class="n">metadata</span><span class="p">:</span> <span class="nb">dict</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Apply the metadata interpretation to the storageproofs</span>
+
+<span class="sd">        :param storageproofs: the list of storage proofs, typically [&quot;proof&quot;][&quot;storageProof&quot;] from the EIP 1186 response</span>
+<span class="sd">        :param metadata: the metadata for id eip1186:fv describing the layout of the proven values</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">_fields</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_slotvalues</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">proof</span> <span class="ow">in</span> <span class="n">storageproofs</span><span class="p">:</span>
+            <span class="c1"># Notice: the proof values omit the 0&#39;s from the big end, so we must put them back.</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_slotvalues</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="nb">bytes</span><span class="p">(</span><span class="n">HexBytes</span><span class="p">(</span><span class="n">proof</span><span class="p">[</span><span class="s2">&quot;value&quot;</span><span class="p">]))</span><span class="o">.</span><span class="n">rjust</span><span class="p">(</span><span class="mi">32</span><span class="p">,</span> <span class="sa">b</span><span class="s2">&quot;</span><span class="se">\x00</span><span class="s2">&quot;</span><span class="p">))</span>
+
+        <span class="c1"># Notice: the slot number in the metadata is the original storage slot</span>
+        <span class="c1"># relative to the base storage location of the struct.</span>
+
+        <span class="n">islotvalue</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="n">storageslot</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="k">for</span> <span class="n">field</span> <span class="ow">in</span> <span class="n">metadata</span><span class="p">[</span><span class="s2">&quot;fields&quot;</span><span class="p">]:</span>
+            <span class="c1"># every time the storage slot changes we bump the index into our</span>
+            <span class="c1"># slotvalues array. This is a bit awkward, we will likely change the</span>
+            <span class="c1"># metadata to make it less so.</span>
+            <span class="k">if</span> <span class="n">field</span><span class="p">[</span><span class="s2">&quot;slot&quot;</span><span class="p">]</span> <span class="o">!=</span> <span class="n">storageslot</span><span class="p">:</span>
+                <span class="n">islotvalue</span> <span class="o">+=</span> <span class="mi">1</span>
+
+            <span class="n">slotvalue</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_slotvalues</span><span class="p">[</span><span class="n">islotvalue</span><span class="p">]</span>
+            <span class="n">name</span><span class="p">,</span> <span class="n">offset</span><span class="p">,</span> <span class="n">size</span> <span class="o">=</span> <span class="n">field</span><span class="p">[</span><span class="s2">&quot;name&quot;</span><span class="p">],</span> <span class="n">field</span><span class="p">[</span><span class="s2">&quot;offset&quot;</span><span class="p">],</span> <span class="n">field</span><span class="p">[</span><span class="s2">&quot;size&quot;</span><span class="p">]</span>
+            <span class="c1"># we should do this in the backend, the low address of the 32 byte word is on the &#39;right&#39;</span>
+            <span class="n">offset</span> <span class="o">=</span> <span class="mi">32</span> <span class="o">-</span> <span class="n">offset</span> <span class="o">-</span> <span class="n">size</span>
+            <span class="n">fieldvalue</span> <span class="o">=</span> <span class="n">slotvalue</span><span class="p">[</span><span class="n">offset</span> <span class="p">:</span> <span class="n">offset</span> <span class="o">+</span> <span class="n">size</span><span class="p">]</span>
+
+            <span class="bp">self</span><span class="o">.</span><span class="n">_fields</span><span class="p">[</span><span class="n">name</span><span class="p">]</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span>
+                <span class="n">islot</span><span class="o">=</span><span class="n">islotvalue</span><span class="p">,</span>
+                <span class="n">value</span><span class="o">=</span><span class="n">fieldvalue</span>
+                <span class="c1"># we don&#39;t currently include the solidity abi type in the metadata but we may do</span>
+            <span class="p">)</span>
+
+<div class="viewcode-block" id="FieldValues.fields">
+<a class="viewcode-back" href="../../api.html#datatrails_receipt_scitt.elementmetadata.FieldValues.fields">[docs]</a>
+    <span class="k">def</span> <span class="nf">fields</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;return the list of field names&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="nb">list</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_fields</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="FieldValues.value">
+<a class="viewcode-back" href="../../api.html#datatrails_receipt_scitt.elementmetadata.FieldValues.value">[docs]</a>
+    <span class="k">def</span> <span class="nf">value</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        return the value of the field</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_fields</span><span class="p">[</span><span class="n">name</span><span class="p">][</span><span class="s2">&quot;value&quot;</span><span class="p">]</span></div>
+
+
+    <span class="k">def</span> <span class="fm">__getattr__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        dynamic attribute access to the fields by name</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">name</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_fields</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_fields</span><span class="p">[</span><span class="n">name</span><span class="p">][</span><span class="s2">&quot;value&quot;</span><span class="p">]</span>
+
+        <span class="k">raise</span> <span class="ne">AttributeError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">name</span><span class="si">}</span><span class="s2"> is not a field or an attribute&quot;</span><span class="p">)</span></div>
+
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2023, support@datatrails.ai.</p>
+  </div>
+
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+    <!-- Theme Analytics -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-7K46H3KK7N"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+
+      gtag('config', 'G-7K46H3KK7N', {
+          'anonymize_ip': false,
+      });
+    </script> 
+
+</body>
+</html>
