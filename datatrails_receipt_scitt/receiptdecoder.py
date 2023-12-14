@@ -26,21 +26,20 @@ import cbor2.decoder
 from pycose.messages.sign1message import Sign1Message
 
 
-def receipt_trie_alg_contents(receiptb64: str) -> Tuple[dict, bool]:
+def receipt_trie_alg_contents(receipt: bytes) -> Tuple[dict, bool]:
     """decode the protected header, the signature and the tree-alg contents from the receipt.
 
     The semantics of the contents are defined by the EIP1186NamedSlotProofs tree
     alg.
 
-    :param str receipt: base64 encoded CBOR Cose Sign1 receipt value obtained from the receipts api
+    :param str receipt: base64 encoded CBOR, or CBOR Cose Sign1 receipt value obtained from the receipts api
 
     :return: a tuple of proof and whether the proof is public or permissioned
     """
-    cbor_msg = base64.standard_b64decode(receiptb64)
 
     # first attempt to decode into pycose cose sign1
     try:
-        decoded_msg = Sign1Message.decode(cbor_msg)
+        decoded_msg = Sign1Message.decode(receipt)
 
         payload = decoded_msg.payload
 
@@ -52,6 +51,8 @@ def receipt_trie_alg_contents(receiptb64: str) -> Tuple[dict, bool]:
     except AttributeError:
         # if we can't decode the message into the pycose cose sign1,
         #   attempt to decode it into our notary representation
+        cbor_msg = base64.standard_b64decode(receipt)
+
         decoded_msg = cbor2.decoder.loads(cbor_msg)
 
         # the notary receipt is in the form: [sign_protected, [signature, payload]]
@@ -59,6 +60,7 @@ def receipt_trie_alg_contents(receiptb64: str) -> Tuple[dict, bool]:
         public = False
 
     contents = json.loads(payload)
+
     return contents, public
 
 

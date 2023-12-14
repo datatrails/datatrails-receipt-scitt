@@ -13,8 +13,8 @@ def receipt_verify(opts):
     """
     sub command implementation for verifying, and optionally decoding, a receipt
     """
-    b64 = opts.receipt.read()
-    contents, public = receipt_trie_alg_contents(b64)
+    receipt: bytes = opts.receipt.read()
+    contents, public = receipt_trie_alg_contents(receipt)
     r = load_receipt_contents(contents)
 
     r.verify(opts.worldroot)
@@ -80,7 +80,7 @@ not supplied the account existence is not verified.
     s.add_argument(
         "receipt",
         nargs="?",
-        type=argparse.FileType("r"),
+        type=argparse.FileType("rb"),
         default=(None if sys.stdin.isatty() else sys.stdin),
     )
     s.set_defaults(func=receipt_verify)

@@ -42,29 +42,29 @@ class TestSimpleHashReceipt(TestCase):
         test that we can verify and decode the receipt in the cose_sign1 format
         """
         contents = json_loads_receipt_contents(
-            "simplehash_receipt_happy_cose_sign1.b64"
+            "simplehash_receipt_happy_cose_sign1.cbor"
         )
         sr = SimpleHashReceipt(contents)
         anchor = sr.decode()
         self.assertEqual(
-            anchor["tenant"], "tenant/e3234a54-cd99-9769-3efe-faccff52f0de"
+            anchor["tenant"], "tenant/f47baab2-443c-9b01-6585-48940b552475"
         )
         self.assertEqual(
             anchor["anchor"],
-            "e511713031f00b7c1d60ab65a01451284c32f7108e2aec7f707a889c777e7731",
+            "d2183df567cf7703362986fdbd8944507ae657a2c8fcccc65932469957f4fbca",
         )
         self.assertEqual(anchor["hashSchemaVersion"], 2)
-        self.assertEqual(anchor["eventCount"], 8)
+        self.assertEqual(anchor["eventCount"], 1)
         self.assertEqual(anchor["proofMechanism"], 2)
-        self.assertEqual(anchor["startTimeRFC3339"], "2023-10-12T13:10:43Z")
-        self.assertEqual(anchor["endTimeRFC3339"], "2023-10-16T11:55:54Z")
+        self.assertEqual(anchor["startTimeRFC3339"], "2023-12-05T11:04:26Z")
+        self.assertEqual(anchor["endTimeRFC3339"], "2023-12-05T11:29:24Z")
         self.assertEqual(
             anchor["startTimeUnix"],
-            1697116243,
+            1701774266,
         )
         self.assertEqual(
             anchor["endTimeUnix"],
-            1697457354,
+            1701775764,
         )
         print(json.dumps(anchor, sort_keys=True, indent="  "))
 
